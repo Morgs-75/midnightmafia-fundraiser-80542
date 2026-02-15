@@ -40,10 +40,12 @@ export function NumberTile({ data, isSelected, onSelect }: NumberTileProps) {
       whileHover={isClickable ? { scale: 1.05 } : {}}
       whileTap={isClickable ? { scale: 0.95 } : {}}
     >
-      {/* Team logo/crown for team numbers */}
+      {/* Team badge for team numbers */}
       {isTeamNumber && (
-        <div className="absolute -top-1 -right-1 bg-purple-600 rounded-full p-1 shadow-lg">
-          <Crown className="w-4 h-4 text-yellow-300 fill-yellow-300" />
+        <div className="absolute -top-2 -right-2 bg-purple-600 rounded-full px-2 py-0.5 shadow-lg border border-yellow-400">
+          <span className="text-xs font-bold text-yellow-300" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            ⭐ TEAM
+          </span>
         </div>
       )}
       

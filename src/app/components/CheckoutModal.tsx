@@ -68,6 +68,7 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [displayPublicly, setDisplayPublicly] = useState(false);
+  const [promoCode, setPromoCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const count = selectedNumbers.length;
@@ -86,6 +87,35 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
       // Import board ID from config
       const { BOARD_ID } = await import('../../lib/supabase');
 
+      // Check if promo code is used
+      if (promoCode.trim().toUpperCase() === 'OUTLAWS') {
+        // Use promo code flow - skip Stripe, create purchase directly
+        const promoRes = await fetch('/.netlify/functions/create-promo-purchase', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            boardId: BOARD_ID,
+            numbers: selectedNumbers,
+            displayName: displayPublicly ? displayName.trim() : 'Anonymous',
+            email: email.trim(),
+            phone: phone.trim(),
+            message: message.trim(),
+            promoCode: 'OUTLAWS',
+          }),
+        });
+
+        if (!promoRes.ok) {
+          const error = await promoRes.json();
+          throw new Error(error.error || 'Failed to process promo code');
+        }
+
+        // Success! Reload to show updated board
+        alert('✅ Success! Your team numbers have been claimed.');
+        window.location.reload();
+        return;
+      }
+
+      // Normal payment flow
       // Step 1: Create hold
       const holdRes = await fetch('/.netlify/functions/create-hold', {
         method: 'POST',
@@ -255,6 +285,26 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
                       className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors"
                       style={{ fontFamily: 'Poppins, sans-serif' }}
                     />
+                  </div>
+
+                  <div>
+                    <label htmlFor="promoCode" className="block text-sm font-medium text-gray-300 mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                      Promo Code <span className="text-gray-500 text-xs">(Optional - Team members only)</span>
+                    </label>
+                    <input
+                      id="promoCode"
+                      type="text"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                      placeholder="Enter team code"
+                      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors uppercase"
+                      style={{ fontFamily: 'Poppins, sans-serif' }}
+                    />
+                    {promoCode.trim().toUpperCase() === 'OUTLAWS' && (
+                      <p className="mt-2 text-sm text-green-400 flex items-center gap-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                        ⭐ Team code valid! Your purchase will be FREE.
+                      </p>
+                    )}
                   </div>
 
                   {/* Pricing Breakdown */}

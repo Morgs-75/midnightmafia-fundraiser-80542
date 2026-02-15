@@ -12,7 +12,7 @@ export function useNumbers() {
     try {
       const { data, error } = await supabase
         .from('numbers')
-        .select('number, status, display_name, message')
+        .select('number, status, display_name, message, promo_code')
         .eq('board_id', BOARD_ID)
         .order('number', { ascending: true });
 
@@ -24,7 +24,7 @@ export function useNumbers() {
         status: n.status as 'available' | 'held' | 'sold',
         displayName: n.display_name || undefined,
         message: n.message || undefined,
-        isTeamNumber: false, // You can add logic to determine team numbers
+        isTeamNumber: n.promo_code === 'OUTLAWS', // Team numbers have OUTLAWS promo code
       }));
 
       setNumbers(transformedNumbers);
