@@ -92,13 +92,6 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
         </div>
       )}
 
-      {/* TEAM star - absolutely positioned */}
-      {status === "sold" && isTeamNumber && (
-        <div className="absolute bottom-1 left-1/2 -translate-x-1/2">
-          <span className="text-xl">⭐</span>
-        </div>
-      )}
-
       <div className="flex flex-col items-center justify-center h-full p-2">
         <span
           className={`text-2xl md:text-3xl ${
@@ -116,6 +109,10 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
         >
           {number}
         </span>
+
+        {status === "sold" && isTeamNumber && (
+          <span className="text-base mt-1">⭐</span>
+        )}
 
         {status === "sold" && !isTeamNumber && displayName && (
           <span className="text-xs mt-1 truncate max-w-full px-1 text-pink-300/80" style={{ fontFamily: 'Poppins, sans-serif' }}>
