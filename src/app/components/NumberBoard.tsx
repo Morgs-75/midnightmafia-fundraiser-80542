@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { NumberData } from "../types";
 import { NumberTile } from "./NumberTile";
+import { MessageModal } from "./MessageModal";
 import { Crown, Sparkles, Circle } from "lucide-react";
 
 interface NumberBoardProps {
@@ -9,6 +11,7 @@ interface NumberBoardProps {
 }
 
 export function NumberBoard({ numbers, selectedNumbers, onSelectNumber }: NumberBoardProps) {
+  const [selectedMessage, setSelectedMessage] = useState<NumberData | null>(null);
   const teamNumberCount = numbers.filter(n => n.isTeamNumber).length;
   
   return (
@@ -33,7 +36,9 @@ export function NumberBoard({ numbers, selectedNumbers, onSelectNumber }: Number
             <div className="w-6 h-6 bg-gradient-to-br from-pink-600/30 to-purple-700/30 border-2 border-pink-500 rounded flex items-center justify-center">
               <Sparkles className="w-3 h-3 text-pink-400" />
             </div>
-            <span className="text-gray-300" style={{ fontFamily: 'Poppins, sans-serif' }}>Sold</span>
+            <span className="text-gray-300" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              Sold <span className="text-pink-400 text-xs">(click to view message)</span>
+            </span>
           </div>
           
           <div className="flex items-center gap-2">
@@ -59,9 +64,17 @@ export function NumberBoard({ numbers, selectedNumbers, onSelectNumber }: Number
             data={numberData}
             isSelected={selectedNumbers.includes(numberData.number)}
             onSelect={onSelectNumber}
+            onViewMessage={setSelectedMessage}
           />
         ))}
       </div>
+
+      {/* Message Modal */}
+      <MessageModal
+        isOpen={selectedMessage !== null}
+        data={selectedMessage}
+        onClose={() => setSelectedMessage(null)}
+      />
     </section>
   );
 }

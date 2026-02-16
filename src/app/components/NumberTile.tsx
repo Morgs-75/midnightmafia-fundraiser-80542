@@ -6,9 +6,10 @@ interface NumberTileProps {
   data: NumberData;
   isSelected: boolean;
   onSelect: (number: number) => void;
+  onViewMessage?: (data: NumberData) => void;
 }
 
-export function NumberTile({ data, isSelected, onSelect }: NumberTileProps) {
+export function NumberTile({ data, isSelected, onSelect, onViewMessage }: NumberTileProps) {
   const { number, status, displayName, isTeamNumber } = data;
   // Force cache bust - updated colors to pink/purple
 
@@ -32,14 +33,31 @@ export function NumberTile({ data, isSelected, onSelect }: NumberTileProps) {
   };
 
   const isClickable = status === "available";
+  const isSold = status === "sold";
+
+  const handleClick = () => {
+    if (isClickable) {
+      onSelect(number);
+    } else if (isSold && onViewMessage) {
+      onViewMessage(data);
+    }
+  };
 
   return (
     <motion.button
-      onClick={() => isClickable && onSelect(number)}
-      disabled={!isClickable}
-      className={`relative aspect-square rounded-lg transition-all duration-200 ${getStatusStyles()}`}
-      whileHover={isClickable ? { scale: 1.05 } : {}}
-      whileTap={isClickable ? { scale: 0.95 } : {}}
+      onClick={handleClick}
+      className={`relative aspect-square rounded-lg transition-all duration-200 ${getStatusStyles()} ${
+        isSold ? 'cursor-pointer hover:scale-105' : ''
+      }`}
+      whileHover={isClickable ? { scale: 1.05 } : isSold ? { scale: 1.05 } : {}}
+      whileTap={
+        isClickable
+          ? { scale: 0.95 }
+          : isSold
+          ? { scale: 0.95, rotate: 360 }
+          : {}
+      }
+      transition={isSold ? { rotate: { duration: 0.6 } } : {}}
     >
       {/* Team badge for team numbers */}
       {isTeamNumber && (
