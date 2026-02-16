@@ -30,7 +30,8 @@ export async function handler() {
     .from("numbers")
     .update({
       status: "available",
-      hold_expires_at: null
+      hold_expires_at: null,
+      hold_id: null  // Clear hold link when releasing
     })
     .in("id", ids);
 

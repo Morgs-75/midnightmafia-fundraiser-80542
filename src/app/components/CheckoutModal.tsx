@@ -20,6 +20,12 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
   const [promoCode, setPromoCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMessageExpanded, setIsMessageExpanded] = useState(false);
+  const [errors, setErrors] = useState<{
+    displayName?: string;
+    email?: string;
+    phone?: string;
+    message?: string;
+  }>({});
 
   const count = selectedNumbers.length;
   const subtotal = calculatePrice(count);
@@ -29,8 +35,56 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
   const savings = regularPrice - subtotal;
   const freeNumbers = Math.floor(count / 6); // One free per complete package
 
+  const validateForm = (): boolean => {
+    const newErrors: typeof errors = {};
+
+    // Validate display name
+    if (!displayName.trim()) {
+      newErrors.displayName = "Name is required";
+    } else if (displayName.trim().length < 2) {
+      newErrors.displayName = "Name must be at least 2 characters";
+    } else if (displayName.trim().length > 50) {
+      newErrors.displayName = "Name must be less than 50 characters";
+    }
+
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!emailRegex.test(email.trim())) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    // Validate phone (optional, but if provided must be valid)
+    if (phone.trim()) {
+      // Remove spaces and check if it's a valid Australian phone format
+      const phoneDigits = phone.replace(/\s/g, '');
+      const phoneRegex = /^(\+?61|0)[2-478](?:[ -]?[0-9]){8}$/;
+      if (!phoneRegex.test(phoneDigits)) {
+        newErrors.phone = "Please enter a valid Australian phone number";
+      }
+    }
+
+    // Validate message length
+    if (message.trim().length > 200) {
+      newErrors.message = "Message must be less than 200 characters";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Clear previous errors
+    setErrors({});
+
+    // Validate form
+    if (!validateForm()) {
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -56,7 +110,10 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
 
         if (!promoRes.ok) {
           const error = await promoRes.json();
-          throw new Error(error.error || 'Failed to process promo code');
+          if (promoRes.status === 409) {
+            throw new Error(error.error || 'One or more of your selected numbers were just taken. Please refresh and try again.');
+          }
+          throw new Error(error.error || 'Failed to process promo code. Please try again.');
         }
 
         // Success! Reload to show updated board
@@ -81,8 +138,11 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
       });
 
       if (!holdRes.ok) {
+        if (holdRes.status === 409) {
+          throw new Error('One or more of your selected numbers were just taken by someone else. Please select different numbers and try again.');
+        }
         const text = await holdRes.text();
-        throw new Error(text || 'Failed to create hold');
+        throw new Error(text || 'Failed to reserve your numbers. Please try again.');
       }
 
       const { holdId } = await holdRes.json();
@@ -99,7 +159,9 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
       });
 
       if (!checkoutRes.ok) {
-        throw new Error('Failed to create checkout session');
+        const errorText = await checkoutRes.text();
+        console.error('Checkout creation failed:', errorText);
+        throw new Error('Failed to create payment session. Please try again or contact support.');
       }
 
       const { url } = await checkoutRes.json();
@@ -170,11 +232,21 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
                       type="text"
                       required
                       value={displayName}
-                      onChange={(e) => setDisplayName(e.target.value)}
+                      onChange={(e) => {
+                        setDisplayName(e.target.value);
+                        if (errors.displayName) setErrors({ ...errors, displayName: undefined });
+                      }}
                       placeholder="Enter your name"
-                      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors"
+                      className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-500 focus:outline-none transition-colors ${
+                        errors.displayName ? 'border-red-500 focus:border-red-500' : 'border-gray-700 focus:border-purple-500'
+                      }`}
                       style={{ fontFamily: 'Poppins, sans-serif' }}
                     />
+                    {errors.displayName && (
+                      <p className="mt-1 text-sm text-red-400" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                        {errors.displayName}
+                      </p>
+                    )}
 
                     {/* Display publicly checkbox */}
                     <div className="mt-3 flex items-start gap-3">
@@ -235,12 +307,28 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
                             <textarea
                               id="message"
                               value={message}
-                              onChange={(e) => setMessage(e.target.value)}
+                              onChange={(e) => {
+                                setMessage(e.target.value);
+                                if (errors.message) setErrors({ ...errors, message: undefined });
+                              }}
                               placeholder="Go team! Bring it home! 💪"
                               rows={3}
-                              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors resize-none"
+                              maxLength={200}
+                              className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-500 focus:outline-none transition-colors resize-none ${
+                                errors.message ? 'border-red-500 focus:border-red-500' : 'border-gray-700 focus:border-purple-500'
+                              }`}
                               style={{ fontFamily: 'Poppins, sans-serif' }}
                             />
+                            <div className="flex justify-between items-center mt-1">
+                              {errors.message && (
+                                <p className="text-sm text-red-400" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                                  {errors.message}
+                                </p>
+                              )}
+                              <p className="text-xs text-gray-500 ml-auto" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                                {message.length}/200
+                              </p>
+                            </div>
                           </div>
                         </motion.div>
                       )}
@@ -256,11 +344,21 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
                       type="email"
                       required
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        if (errors.email) setErrors({ ...errors, email: undefined });
+                      }}
                       placeholder="your@email.com (kept private)"
-                      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors"
+                      className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-500 focus:outline-none transition-colors ${
+                        errors.email ? 'border-red-500 focus:border-red-500' : 'border-gray-700 focus:border-purple-500'
+                      }`}
                       style={{ fontFamily: 'Poppins, sans-serif' }}
                     />
+                    {errors.email && (
+                      <p className="mt-1 text-sm text-red-400" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                        {errors.email}
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -271,11 +369,21 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
                       id="phone"
                       type="tel"
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
+                      onChange={(e) => {
+                        setPhone(e.target.value);
+                        if (errors.phone) setErrors({ ...errors, phone: undefined });
+                      }}
                       placeholder="0400 123 456 (kept private)"
-                      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors"
+                      className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-500 focus:outline-none transition-colors ${
+                        errors.phone ? 'border-red-500 focus:border-red-500' : 'border-gray-700 focus:border-purple-500'
+                      }`}
                       style={{ fontFamily: 'Poppins, sans-serif' }}
                     />
+                    {errors.phone && (
+                      <p className="mt-1 text-sm text-red-400" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                        {errors.phone}
+                      </p>
+                    )}
                   </div>
 
                   <div>

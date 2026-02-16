@@ -136,7 +136,7 @@ export async function handler(event) {
         };
       }
 
-      // Mark numbers as sold (and clear promo_code since this is a paid purchase)
+      // Mark numbers as sold (and clear promo_code and hold_id since this is a paid purchase)
       const { data: updatedNumbers, error: updateError } = await supabase
         .from('numbers')
         .update({
@@ -144,10 +144,11 @@ export async function handler(event) {
           display_name: hold.display_name,
           message: hold.message,
           hold_expires_at: null,
+          hold_id: null, // Clear hold link
           promo_code: null // Clear any promo code since this is a paid purchase
         })
-        .eq('board_id', hold.board_id)
-        .eq('status', 'held')
+        .eq('hold_id', holdId) // Only update numbers that belong to THIS specific hold
+        .eq('status', 'held')  // Safety check: only update if still held
         .select();
 
       if (updateError) {
@@ -184,9 +185,11 @@ export async function handler(event) {
         console.log('⚠️ Rolling back: reverting numbers to held status');
         await supabase
           .from('numbers')
-          .update({ status: 'held' })
-          .eq('board_id', hold.board_id)
-          .in('number', updatedNumbers.map(n => n.number));
+          .update({
+            status: 'held',
+            hold_id: holdId  // Re-link to hold
+          })
+          .in('id', updatedNumbers.map(n => n.id));
 
         return {
           statusCode: 500,

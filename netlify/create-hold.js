@@ -35,12 +35,17 @@ export async function handler(event) {
     .select()
     .single();
 
-  // Mark numbers as held
+  // Mark numbers as held and link them to this specific hold
   const { data: updatedNumbers, error: updateError } = await supabase
     .from('numbers')
-    .update({ status: 'held', hold_expires_at: expiresAt })
+    .update({
+      status: 'held',
+      hold_expires_at: expiresAt,
+      hold_id: hold.id  // Link numbers to this specific hold
+    })
     .in('number', numbers)
     .eq('board_id', boardId)
+    .eq('status', 'available')  // Only update if still available
     .select();
 
   if (updateError) {
