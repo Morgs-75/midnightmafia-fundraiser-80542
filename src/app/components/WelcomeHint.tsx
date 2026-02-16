@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "motion/react";
-import { X, MousePointerClick, Star, MessageSquare } from "lucide-react";
+import { X, MousePointerClick, MessageSquare } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export function WelcomeHint() {
@@ -145,7 +145,7 @@ export function WelcomeHint() {
                     transition={{ delay: 0.5 }}
                     className="flex items-start gap-2 md:gap-3 p-3 md:p-4 bg-black/30 rounded-xl border border-purple-500/30"
                   >
-                    <Star className="w-5 h-5 md:w-6 md:h-6 text-yellow-400 fill-yellow-400 flex-shrink-0 mt-1" />
+                    <span className="text-xl md:text-2xl flex-shrink-0">⭐</span>
                     <div>
                       <p className="text-white font-semibold mb-1" style={{ fontFamily: 'Poppins, sans-serif' }}>
                         Click Team Numbers
