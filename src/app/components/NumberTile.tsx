@@ -13,6 +13,9 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
   const { number, status, displayName, isTeamNumber } = data;
   // Force cache bust - updated colors to pink/purple
 
+  // Random delay for pulsing animation (0-5 seconds)
+  const pulseDelay = Math.random() * 5;
+
   const getStatusStyles = () => {
     if (isTeamNumber) {
       // Team numbers get special purple/black mafia styling
@@ -49,6 +52,30 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
       className={`relative aspect-square rounded-lg transition-all duration-200 ${getStatusStyles()} ${
         isSold ? 'cursor-pointer hover:scale-105' : ''
       }`}
+      animate={
+        isClickable && !isSelected
+          ? {
+              scale: [1, 1.05, 1],
+              boxShadow: [
+                "0 0 0 0 rgba(168, 85, 247, 0)",
+                "0 0 20px 5px rgba(168, 85, 247, 0.4)",
+                "0 0 0 0 rgba(168, 85, 247, 0)"
+              ]
+            }
+          : {}
+      }
+      transition={
+        isClickable && !isSelected
+          ? {
+              duration: 2,
+              repeat: Infinity,
+              delay: pulseDelay,
+              repeatDelay: 3
+            }
+          : isSold
+          ? { rotate: { duration: 0.6 } }
+          : {}
+      }
       whileHover={isClickable ? { scale: 1.05 } : isSold ? { scale: 1.05 } : {}}
       whileTap={
         isClickable
@@ -57,7 +84,6 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
           ? { scale: 0.95, rotate: 360 }
           : {}
       }
-      transition={isSold ? { rotate: { duration: 0.6 } } : {}}
     >
       {/* Team badge for team numbers */}
       {isTeamNumber && (
@@ -93,10 +119,8 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
           {number}
         </span>
         
-        {status === "sold" && displayName && (
-          <span className={`text-xs mt-1 truncate max-w-full px-1 ${
-            isTeamNumber ? "text-purple-200/90" : "text-pink-300/80"
-          }`} style={{ fontFamily: 'Poppins, sans-serif' }}>
+        {status === "sold" && displayName && !isTeamNumber && (
+          <span className="text-xs mt-1 truncate max-w-full px-1 text-pink-300/80" style={{ fontFamily: 'Poppins, sans-serif' }}>
             {displayName}
           </span>
         )}

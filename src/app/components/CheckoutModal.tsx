@@ -184,9 +184,9 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             className="fixed inset-4 md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-md bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl border-2 border-purple-500/30 shadow-2xl z-50 overflow-hidden"
           >
-            <div className="relative h-full flex flex-col">
+            <div className="relative h-full flex flex-col max-h-[90vh]">
               {/* Header */}
-              <div className="relative px-6 py-6 border-b border-gray-700">
+              <div className="relative px-6 py-4 border-b border-gray-700">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-pink-600/20" />
                 <button
                   onClick={onClose}
@@ -209,8 +209,8 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
               </div>
               
               {/* Content */}
-              <div className="flex-1 overflow-y-auto px-6 py-6">
-                <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="flex-1 overflow-y-auto px-6 py-4">
+                <form onSubmit={handleSubmit} className="space-y-3">
                   <div>
                     <label htmlFor="displayName" className="block text-sm font-medium text-gray-300 mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
                       Your Name <span className="text-pink-400">*</span>
@@ -337,18 +337,37 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
                     {/* Payment Breakdown */}
                     <div className="px-4 py-3 bg-gray-800/50 rounded-lg border border-gray-700">
                       <div className="space-y-2 text-sm" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                        <div className="flex justify-between text-gray-300">
-                          <span>Subtotal ({count} {count === 1 ? 'number' : 'numbers'})</span>
-                          <span>${subtotal.toFixed(2)}</span>
-                        </div>
-                        <div className="flex justify-between text-gray-400 text-xs">
-                          <span>Payment processing fee</span>
-                          <span>${stripeFee.toFixed(2)}</span>
-                        </div>
-                        <div className="flex justify-between text-white font-bold pt-2 border-t border-gray-600 text-base">
-                          <span>Total</span>
-                          <span>${total.toFixed(2)}</span>
-                        </div>
+                        {promoCode.trim().toUpperCase() === 'OUTLAWS' ? (
+                          <>
+                            <div className="flex justify-between text-gray-300 line-through opacity-50">
+                              <span>Subtotal ({count} {count === 1 ? 'number' : 'numbers'})</span>
+                              <span>${subtotal.toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between text-green-400 font-semibold">
+                              <span>Team Discount</span>
+                              <span>-${subtotal.toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between text-white font-bold pt-2 border-t border-gray-600 text-xl">
+                              <span>Total</span>
+                              <span>$0.00</span>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="flex justify-between text-gray-300">
+                              <span>Subtotal ({count} {count === 1 ? 'number' : 'numbers'})</span>
+                              <span>${subtotal.toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between text-gray-400 text-xs">
+                              <span>Payment processing fee</span>
+                              <span>${stripeFee.toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between text-white font-bold pt-2 border-t border-gray-600 text-base">
+                              <span>Total</span>
+                              <span>${total.toFixed(2)}</span>
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -362,6 +381,8 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
                     >
                       {isSubmitting ? (
                         <span>Processing...</span>
+                      ) : promoCode.trim().toUpperCase() === 'OUTLAWS' ? (
+                        <span>Claim your Team Number!</span>
                       ) : (
                         <span>Complete Purchase - ${total.toFixed(2)}</span>
                       )}

@@ -9,7 +9,7 @@ import { ShareQRButton } from "./ShareQRButton";
 export function LandingPage() {
   const navigate = useNavigate();
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
-  const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+  const currentUrl = typeof window !== 'undefined' ? window.location.origin : 'https://midnightmafia.au';
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black text-white flex items-center justify-center px-4">
