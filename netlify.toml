@@ -3,6 +3,11 @@
   publish = "dist"
   functions = "netlify"
 
+# Force fresh build - ignore all caches
+[build.environment]
+  NODE_VERSION = "22"
+  NPM_FLAGS = "--no-cache"
+
 [functions]
   node_bundler = "esbuild"
 
