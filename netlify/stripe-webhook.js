@@ -76,12 +76,19 @@ export async function handler(event) {
     const session = stripeEvent.data.object;
     const holdId = session.metadata?.holdId;
 
+    console.log('📦 Event type:', stripeEvent.type);
+    console.log('📋 Session ID:', session.id);
+    console.log('🎯 Hold ID from metadata:', holdId);
+
     if (!holdId) {
-      console.error('No holdId in session metadata');
-      return { statusCode: 400, body: 'No holdId' };
+      console.error('❌ No holdId in session metadata');
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: 'No holdId in metadata' })
+      };
     }
 
-    console.log('Processing payment for holdId:', holdId);
+    console.log('⏳ Processing payment for holdId:', holdId);
 
     try {
       const supabase = createClient(
@@ -97,14 +104,24 @@ export async function handler(event) {
         .single();
 
       if (holdError || !hold) {
-        console.error('Hold not found:', holdError);
-        return { statusCode: 404, body: 'Hold not found' };
+        console.error('❌ Hold not found:', holdError?.message || 'No hold data');
+        console.error('   Hold ID searched:', holdId);
+        return {
+          statusCode: 404,
+          body: JSON.stringify({
+            error: 'Hold not found',
+            holdId: holdId,
+            details: holdError?.message
+          })
+        };
       }
 
-      console.log('Found hold for board:', hold.board_id);
+      console.log('✅ Found hold for board:', hold.board_id);
+      console.log('   Display name:', hold.display_name);
+      console.log('   Email:', hold.email);
 
       // Mark numbers as sold
-      const { error: updateError } = await supabase
+      const { data: updatedNumbers, error: updateError } = await supabase
         .from('numbers')
         .update({
           status: 'sold',
@@ -113,15 +130,24 @@ export async function handler(event) {
           hold_expires_at: null
         })
         .eq('board_id', hold.board_id)
-        .eq('status', 'held');
+        .eq('status', 'held')
+        .select();
 
       if (updateError) {
-        console.error('Error updating numbers:', updateError);
-        return { statusCode: 500, body: 'Error updating numbers' };
+        console.error('❌ Error updating numbers:', updateError.message);
+        return {
+          statusCode: 500,
+          body: JSON.stringify({
+            error: 'Error updating numbers',
+            details: updateError.message
+          })
+        };
       }
 
+      console.log(`✅ Updated ${updatedNumbers?.length || 0} numbers to sold`);
+
       // Create purchase record
-      const { error: purchaseError } = await supabase
+      const { data: purchase, error: purchaseError } = await supabase
         .from('purchases')
         .insert({
           board_id: hold.board_id,
@@ -131,14 +157,22 @@ export async function handler(event) {
           message: hold.message,
           amount_cents: session.amount_total,
           stripe_payment_intent: session.payment_intent
-        });
+        })
+        .select();
 
       if (purchaseError) {
-        console.error('Error creating purchase:', purchaseError);
-        return { statusCode: 500, body: 'Error creating purchase' };
+        console.error('❌ Error creating purchase:', purchaseError.message);
+        return {
+          statusCode: 500,
+          body: JSON.stringify({
+            error: 'Error creating purchase',
+            details: purchaseError.message
+          })
+        };
       }
 
-      console.log('✅ Payment processed successfully');
+      console.log('✅ Created purchase record:', purchase?.[0]?.id);
+      console.log('✅✅✅ Payment processed successfully');
     } catch (error) {
       console.error('Error processing payment:', error);
       return {
@@ -148,8 +182,14 @@ export async function handler(event) {
     }
   }
 
+  console.log('✅ Webhook completed successfully');
+
   return {
     statusCode: 200,
-    body: JSON.stringify({ received: true })
+    body: JSON.stringify({
+      received: true,
+      processed: stripeEvent.type === 'checkout.session.completed',
+      signatureVerified: signatureVerified
+    })
   };
 }
