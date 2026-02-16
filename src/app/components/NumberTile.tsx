@@ -85,15 +85,6 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
           : {}
       }
     >
-      {/* Team badge for team numbers */}
-      {isTeamNumber && (
-        <div className="absolute -top-2 -right-2 bg-purple-600 rounded-full px-2 py-0.5 shadow-lg border border-yellow-400">
-          <span className="text-xs font-bold text-yellow-300" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            ⭐ TEAM
-          </span>
-        </div>
-      )}
-      
       {/* Sparkle for regular sold numbers */}
       {status === "sold" && !isTeamNumber && (
         <div className="absolute -top-1 -right-1">
@@ -119,11 +110,17 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
           {number}
         </span>
         
-        {status === "sold" && (isTeamNumber || displayName) && (
-          <span className={`text-xs mt-1 truncate max-w-full px-1 ${
-            isTeamNumber ? "text-purple-200/90 font-bold" : "text-pink-300/80"
-          }`} style={{ fontFamily: 'Poppins, sans-serif' }}>
-            {isTeamNumber ? "TEAM" : displayName}
+        {status === "sold" && isTeamNumber && (
+          <div className="mt-1 bg-purple-600 rounded-full px-2 py-0.5 shadow-lg border border-yellow-400">
+            <span className="text-xs font-bold text-yellow-300" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              ⭐ TEAM
+            </span>
+          </div>
+        )}
+
+        {status === "sold" && !isTeamNumber && displayName && (
+          <span className="text-xs mt-1 truncate max-w-full px-1 text-pink-300/80" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            {displayName}
           </span>
         )}
       </div>
