@@ -20,7 +20,12 @@ export async function handler(event) {
 
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',
-    payment_method_types: ['card'],
+    payment_method_types: ['card', 'link'],
+    payment_method_options: {
+      card: {
+        request_three_d_secure: 'automatic',
+      },
+    },
     line_items: [
       {
         price_data: {
