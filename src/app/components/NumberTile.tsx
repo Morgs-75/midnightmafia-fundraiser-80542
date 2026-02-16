@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { NumberData } from "../types";
 import { Sparkles, Crown } from "lucide-react";
+import { useState, useEffect } from "react";
 
 interface NumberTileProps {
   data: NumberData;
@@ -13,8 +14,25 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
   const { number, status, displayName, isTeamNumber } = data;
   // Force cache bust - updated colors to pink/purple
 
+  // Track time on page to increase pulse urgency
+  const [timeOnPage, setTimeOnPage] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeOnPage(prev => prev + 1);
+    }, 10000); // Update every 10 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   // Random delay for pulsing animation (0-5 seconds)
   const pulseDelay = Math.random() * 5;
+
+  // Calculate pulse parameters based on time on page
+  // Starts at 3s delay, reduces to 0.5s after 2 minutes
+  const repeatDelay = Math.max(0.5, 3 - (timeOnPage * 0.2));
+  // Increase glow intensity over time
+  const glowIntensity = Math.min(0.7, 0.4 + (timeOnPage * 0.025));
 
   const getStatusStyles = () => {
     if (isTeamNumber) {
@@ -58,7 +76,7 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
               scale: [1, 1.05, 1],
               boxShadow: [
                 "0 0 0 0 rgba(168, 85, 247, 0)",
-                "0 0 20px 5px rgba(168, 85, 247, 0.4)",
+                `0 0 20px 5px rgba(168, 85, 247, ${glowIntensity})`,
                 "0 0 0 0 rgba(168, 85, 247, 0)"
               ]
             }
@@ -70,7 +88,7 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
               duration: 2,
               repeat: Infinity,
               delay: pulseDelay,
-              repeatDelay: 3
+              repeatDelay: repeatDelay
             }
           : isSold
           ? { rotate: { duration: 0.6 } }
