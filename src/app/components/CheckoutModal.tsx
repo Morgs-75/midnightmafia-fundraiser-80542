@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { X, Lock, Sparkles, Gift, TrendingUp, Zap } from "lucide-react";
+import { X, Lock, Sparkles, Gift, TrendingUp, Zap, ChevronDown } from "lucide-react";
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -70,6 +70,7 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
   const [displayPublicly, setDisplayPublicly] = useState(false);
   const [promoCode, setPromoCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isMessageExpanded, setIsMessageExpanded] = useState(false);
 
   const count = selectedNumbers.length;
   const subtotal = calculatePrice(count, pricePerNumber);
@@ -241,19 +242,46 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
                     </div>
                   </div>
                   
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                      Encouragement Message <span className="text-gray-500 text-xs">(Optional)</span>
-                    </label>
-                    <textarea
-                      id="message"
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Go team! Bring it home! 💪"
-                      rows={3}
-                      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors resize-none"
-                      style={{ fontFamily: 'Poppins, sans-serif' }}
-                    />
+                  {/* Collapsible Encouragement Message */}
+                  <div className="border border-gray-700 rounded-lg overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={() => setIsMessageExpanded(!isMessageExpanded)}
+                      className="w-full px-4 py-3 bg-gray-800/50 hover:bg-gray-800 transition-colors flex items-center justify-between"
+                    >
+                      <span className="text-sm font-medium text-gray-300" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                        💬 Add Encouragement Message <span className="text-gray-500 text-xs">(Optional)</span>
+                      </span>
+                      <motion.div
+                        animate={{ rotate: isMessageExpanded ? 180 : 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <ChevronDown className="w-5 h-5 text-gray-400" />
+                      </motion.div>
+                    </button>
+                    <AnimatePresence>
+                      {isMessageExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="p-4 bg-gray-800/30">
+                            <textarea
+                              id="message"
+                              value={message}
+                              onChange={(e) => setMessage(e.target.value)}
+                              placeholder="Go team! Bring it home! 💪"
+                              rows={3}
+                              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors resize-none"
+                              style={{ fontFamily: 'Poppins, sans-serif' }}
+                            />
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                   
                   <div>
