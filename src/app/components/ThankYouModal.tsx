@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "motion/react";
-import { Heart, Sparkles, Trophy, Plane } from "lucide-react";
+import { Heart, Sparkles, Trophy, Plane, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { QRCodeSVG } from "qrcode.react";
 
 interface ThankYouModalProps {
   isOpen: boolean;
@@ -10,6 +11,7 @@ interface ThankYouModalProps {
 
 export function ThankYouModal({ isOpen, displayName, onClose }: ThankYouModalProps) {
   const [showContent, setShowContent] = useState(false);
+  const [showQRCode, setShowQRCode] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -25,7 +27,16 @@ export function ThankYouModal({ isOpen, displayName, onClose }: ThankYouModalPro
     const shareUrl = typeof window !== "undefined" ? window.location.origin : "https://midnightmafia.au";
     const fullMessage = `${shareText}\n\n${shareUrl}`;
 
-    // Try Web Share API first (works great on mobile for Instagram stories)
+    // Check if on mobile device
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    // On desktop, show QR code
+    if (!isMobile) {
+      setShowQRCode(true);
+      return;
+    }
+
+    // On mobile, try Web Share API first (works great for Instagram stories)
     if (navigator.share) {
       try {
         await navigator.share({
@@ -48,9 +59,7 @@ export function ThankYouModal({ isOpen, displayName, onClose }: ThankYouModalPro
         await navigator.clipboard.writeText(fullMessage);
         alert("Message and link copied! Paste it in your Instagram story 💜");
       } catch (clipErr) {
-        // Last resort: Open mailto
-        const mailtoLink = `mailto:?subject=${encodeURIComponent("Support Midnight Mafia Cheer")}&body=${encodeURIComponent(fullMessage)}`;
-        window.location.href = mailtoLink;
+        console.log("Clipboard failed:", clipErr);
       }
     }
   };
@@ -337,6 +346,58 @@ export function ThankYouModal({ isOpen, displayName, onClose }: ThankYouModalPro
               </div>
             </div>
           </motion.div>
+
+          {/* QR Code Modal for Desktop */}
+          <AnimatePresence>
+            {showQRCode && (
+              <>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 bg-black/95 backdrop-blur-sm z-[70]"
+                  onClick={() => setShowQRCode(false)}
+                />
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[70] w-[calc(100%-3rem)] max-w-md"
+                >
+                  <div className="relative bg-gradient-to-br from-gray-900 via-purple-900/30 to-gray-900 rounded-3xl border-2 border-purple-500/50 shadow-2xl p-6">
+                    <button
+                      onClick={() => setShowQRCode(false)}
+                      className="absolute top-2 right-2 p-2 hover:bg-white/10 rounded-lg transition-colors z-50"
+                    >
+                      <X className="w-5 h-5 text-white" />
+                    </button>
+
+                    <div className="text-center">
+                      <h3 className="text-2xl text-white mb-2 font-bold" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+                        Scan to Share on Instagram
+                      </h3>
+                      <p className="text-purple-200 text-sm mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                        Open your phone camera and scan this QR code
+                      </p>
+
+                      <div className="bg-white rounded-2xl p-6 mb-4 flex justify-center">
+                        <QRCodeSVG
+                          value={typeof window !== "undefined" ? window.location.origin : "https://midnightmafia.au"}
+                          size={200}
+                          level="H"
+                          includeMargin={true}
+                        />
+                      </div>
+
+                      <p className="text-purple-200 text-xs" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                        💜 Then share from your phone to Instagram Story!
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
         </>
       )}
     </AnimatePresence>

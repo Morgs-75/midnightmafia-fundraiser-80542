@@ -92,6 +92,48 @@
       text-decoration:none;
     }
     .btn:active{transform: translateY(1px);}
+
+    /* QR Modal */
+    .qr-modal{
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.95);
+      backdrop-filter:blur(10px);
+      z-index:1000;
+      align-items:center;
+      justify-content:center;
+    }
+    .qr-modal.show{display:flex;}
+    .qr-content{
+      background:rgba(13,11,18,.95);
+      border:2px solid rgba(124,60,255,.5);
+      border-radius:24px;
+      padding:32px;
+      max-width:400px;
+      text-align:center;
+      position:relative;
+    }
+    .qr-close{
+      position:absolute;
+      top:12px;
+      right:12px;
+      background:rgba(255,255,255,.1);
+      border:none;
+      border-radius:8px;
+      color:white;
+      cursor:pointer;
+      padding:8px 12px;
+      font-size:18px;
+    }
+    .qr-close:hover{background:rgba(255,255,255,.2);}
+    #qrcode{
+      background:white;
+      padding:20px;
+      border-radius:16px;
+      margin:24px auto;
+      display:inline-block;
+    }
   </style>
 </head>
 <body>
@@ -108,13 +150,36 @@
     <a href="/" class="btn">Back to Board</a>
   </div>
 
+  <!-- QR Code Modal -->
+  <div id="qrModal" class="qr-modal" onclick="closeQRModal(event)">
+    <div class="qr-content" onclick="event.stopPropagation()">
+      <button class="qr-close" onclick="closeQRModal()">&times;</button>
+      <h2 style="margin:0 0 8px; font-size:28px;">Scan to Share on Instagram</h2>
+      <p style="color:var(--muted); font-size:14px; margin:0 0 16px;">Open your phone camera and scan this QR code</p>
+      <div id="qrcode"></div>
+      <p style="color:var(--muted); font-size:12px; margin:8px 0 0;">💜 Then share from your phone to Instagram Story!</p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
   <script>
+    let qrCodeInstance = null;
+
     async function shareToInstagram() {
       const shareText = "I just supported Midnight Mafia Cheer on their journey to Worlds 2026! 💜⭐ Help them reach their goal!";
       const shareUrl = window.location.origin;
       const fullMessage = shareText + "\n\n" + shareUrl;
 
-      // Try Web Share API first (works great on mobile for Instagram stories)
+      // Check if on mobile device
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+      // On desktop, show QR code
+      if (!isMobile) {
+        showQRModal(shareUrl);
+        return;
+      }
+
+      // On mobile, try Web Share API first (works great for Instagram stories)
       if (navigator.share) {
         try {
           await navigator.share({
@@ -129,6 +194,32 @@
       } else {
         // Fallback: Copy to clipboard
         copyToClipboard(fullMessage);
+      }
+    }
+
+    function showQRModal(url) {
+      const modal = document.getElementById('qrModal');
+      const qrContainer = document.getElementById('qrcode');
+
+      // Clear previous QR code
+      qrContainer.innerHTML = '';
+
+      // Generate new QR code
+      qrCodeInstance = new QRCode(qrContainer, {
+        text: url,
+        width: 200,
+        height: 200,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+
+      modal.classList.add('show');
+    }
+
+    function closeQRModal(event) {
+      if (!event || event.target.id === 'qrModal') {
+        document.getElementById('qrModal').classList.remove('show');
       }
     }
 
