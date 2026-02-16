@@ -4,18 +4,29 @@ import { createClient } from '@supabase/supabase-js';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function handler(event) {
-  const sig = event.headers['stripe-signature'];
+  // Get the signature from headers (case-insensitive)
+  const sig = event.headers['stripe-signature'] || event.headers['Stripe-Signature'];
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  // Get raw body - Netlify may base64 encode binary data
+  let body = event.body;
+  if (event.isBase64Encoded) {
+    body = Buffer.from(event.body, 'base64').toString('utf8');
+  }
 
   let stripeEvent;
   try {
     stripeEvent = stripe.webhooks.constructEvent(
-      event.body,
+      body,
       sig,
       webhookSecret
     );
   } catch (err) {
-    return { statusCode: 400, body: err.message };
+    console.error('Webhook signature verification failed:', err.message);
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: err.message })
+    };
   }
 
   if (stripeEvent.type === 'checkout.session.completed') {
