@@ -123,8 +123,8 @@ export function BingoGame() {
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
   const currentUrl =
     typeof window !== "undefined"
-      ? window.location.origin + "/bingo"
-      : "";
+      ? window.location.origin
+      : "https://midnightmafia.au";
 
   // State for message bubbles
   const [messageBubbles, setMessageBubbles] = useState<
