@@ -19,9 +19,9 @@ export function NumberTile({ data, isSelected, onSelect }: NumberTileProps) {
     
     switch (status) {
       case "sold":
-        return "bg-gradient-to-br from-yellow-600/30 to-yellow-700/30 border-2 border-yellow-500 shadow-lg shadow-yellow-500/30";
+        return "bg-gradient-to-br from-pink-600/30 to-purple-700/30 border-2 border-pink-500 shadow-lg shadow-pink-500/30";
       case "held":
-        return "bg-gray-800/60 border-2 border-yellow-500/40 opacity-50";
+        return "bg-gray-800/60 border-2 border-pink-500/40 opacity-50";
       case "available":
       default:
         return isSelected
@@ -52,7 +52,7 @@ export function NumberTile({ data, isSelected, onSelect }: NumberTileProps) {
       {/* Sparkle for regular sold numbers */}
       {status === "sold" && !isTeamNumber && (
         <div className="absolute -top-1 -right-1">
-          <Sparkles className="w-4 h-4 text-yellow-400" />
+          <Sparkles className="w-4 h-4 text-pink-400" />
         </div>
       )}
       
@@ -62,7 +62,7 @@ export function NumberTile({ data, isSelected, onSelect }: NumberTileProps) {
             isTeamNumber
               ? "text-purple-300"
               : status === "sold"
-              ? "text-yellow-400"
+              ? "text-pink-400"
               : status === "held"
               ? "text-gray-500"
               : isSelected
@@ -76,7 +76,7 @@ export function NumberTile({ data, isSelected, onSelect }: NumberTileProps) {
         
         {status === "sold" && displayName && (
           <span className={`text-xs mt-1 truncate max-w-full px-1 ${
-            isTeamNumber ? "text-purple-200/90" : "text-yellow-300/80"
+            isTeamNumber ? "text-purple-200/90" : "text-pink-300/80"
           }`} style={{ fontFamily: 'Poppins, sans-serif' }}>
             {displayName}
           </span>
