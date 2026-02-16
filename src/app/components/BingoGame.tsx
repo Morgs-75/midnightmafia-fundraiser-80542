@@ -570,6 +570,7 @@ export function BingoGame() {
         <ThankYouModal
           isOpen={isThankYouOpen}
           displayName={lastPurchase.displayName}
+          numbers={lastPurchase.numbers}
           onClose={handleThankYouClose}
         />
       )}

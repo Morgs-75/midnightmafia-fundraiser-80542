@@ -6,10 +6,11 @@ import { QRCodeSVG } from "qrcode.react";
 interface ThankYouModalProps {
   isOpen: boolean;
   displayName: string;
+  numbers: number[];
   onClose: () => void;
 }
 
-export function ThankYouModal({ isOpen, displayName, onClose }: ThankYouModalProps) {
+export function ThankYouModal({ isOpen, displayName, numbers, onClose }: ThankYouModalProps) {
   const [showContent, setShowContent] = useState(false);
   const [showQRCode, setShowQRCode] = useState(false);
 
@@ -23,7 +24,8 @@ export function ThankYouModal({ isOpen, displayName, onClose }: ThankYouModalPro
   }, [isOpen]);
 
   const handleShare = async () => {
-    const shareText = "I just supported Midnight Mafia Cheer on their journey to Worlds 2026! 💜⭐ Help them reach their goal!";
+    const numbersText = numbers.sort((a, b) => a - b).join(", ");
+    const shareText = `I'm a proud supporter of Midnight Mafia! 💜⭐\n\nI claimed number${numbers.length > 1 ? 's' : ''}: ${numbersText}\n\nHelp them reach their goal for Worlds 2026!`;
     const shareUrl = typeof window !== "undefined" ? window.location.origin : "https://midnightmafia.au";
     const fullMessage = `${shareText}\n\n${shareUrl}`;
 
@@ -336,7 +338,7 @@ export function ThankYouModal({ isOpen, displayName, onClose }: ThankYouModalPro
                           </motion.div>
 
                           <span className="relative z-10 text-base font-bold">
-                            📱 Share on Instagram Story
+                            📱 Share Your Support
                           </span>
                         </motion.button>
                       </motion.div>
@@ -374,9 +376,9 @@ export function ThankYouModal({ isOpen, displayName, onClose }: ThankYouModalPro
 
                     <div className="text-center">
                       <h3 className="text-2xl text-white mb-2 font-bold" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
-                        Scan to Share on Instagram
+                        Scan to Share
                       </h3>
-                      <p className="text-purple-200 text-sm mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                      <p className="text-purple-200 text-sm mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
                         Open your phone camera and scan this QR code
                       </p>
 
@@ -389,8 +391,14 @@ export function ThankYouModal({ isOpen, displayName, onClose }: ThankYouModalPro
                         />
                       </div>
 
+                      <div className="bg-black/40 rounded-xl p-3 mb-4">
+                        <p className="text-purple-200 text-xs text-left whitespace-pre-line" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                          {`I'm a proud supporter of Midnight Mafia! 💜⭐\n\nI claimed number${numbers.length > 1 ? 's' : ''}: ${numbers.sort((a, b) => a - b).join(", ")}\n\nHelp them reach their goal for Worlds 2026!`}
+                        </p>
+                      </div>
+
                       <p className="text-purple-200 text-xs" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                        💜 Then share from your phone to Instagram Story!
+                        📱 Share to Instagram, Facebook, Twitter & more!
                       </p>
                     </div>
                   </div>
