@@ -22,7 +22,7 @@ export function ShareQRButton({ onClick }: ShareQRButtonProps) {
       whileHover={{ scale: 1.2 }}
       whileTap={{ scale: 0.95 }}
       onClick={onClick}
-      className="fixed top-6 left-4 z-40 px-5 py-3 bg-gradient-to-br from-purple-600 via-pink-600 to-purple-600 rounded-full shadow-2xl border-4 border-yellow-400 group flex items-center gap-2"
+      className="fixed top-4 left-3 md:top-6 md:left-4 z-40 px-3 py-2 md:px-5 md:py-3 bg-gradient-to-br from-purple-600 via-pink-600 to-purple-600 rounded-full shadow-2xl border-2 md:border-4 border-yellow-400 group flex items-center gap-1 md:gap-2"
       aria-label="Share QR Code"
     >
       {/* Outer glow ring */}
@@ -56,9 +56,9 @@ export function ShareQRButton({ onClick }: ShareQRButtonProps) {
           }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <QrCode className="w-7 h-7 text-yellow-300 drop-shadow-lg" />
+          <QrCode className="w-5 h-5 md:w-7 md:h-7 text-yellow-300 drop-shadow-lg" />
         </motion.div>
-        <span className="text-white font-bold text-lg drop-shadow-lg" style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 800 }}>
+        <span className="text-white font-bold text-sm md:text-lg drop-shadow-lg" style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 800 }}>
           Share
         </span>
       </div>

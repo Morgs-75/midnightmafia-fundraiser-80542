@@ -82,9 +82,10 @@ export function QRCodeModal({ isOpen, onClose, url }: QRCodeModalProps) {
                 {/* Close button */}
                 <button
                   onClick={onClose}
-                  className="absolute top-4 right-4 p-2 hover:bg-white/10 rounded-lg transition-colors"
+                  className="absolute top-2 right-2 md:top-4 md:right-4 p-2 hover:bg-white/10 rounded-lg transition-colors z-50"
+                  aria-label="Close"
                 >
-                  <X className="w-5 h-5 text-white" />
+                  <X className="w-6 h-6 md:w-5 md:h-5 text-white" />
                 </button>
 
                 {/* Header */}
