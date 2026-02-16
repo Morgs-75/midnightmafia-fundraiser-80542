@@ -30,8 +30,8 @@ export function NumberBoard({ numbers, selectedNumbers, onSelectNumber }: Number
           </div>
           
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-gradient-to-br from-yellow-600/30 to-yellow-700/30 border-2 border-yellow-500 rounded flex items-center justify-center">
-              <Sparkles className="w-3 h-3 text-yellow-400" />
+            <div className="w-6 h-6 bg-gradient-to-br from-pink-600/30 to-purple-700/30 border-2 border-pink-500 rounded flex items-center justify-center">
+              <Sparkles className="w-3 h-3 text-pink-400" />
             </div>
             <span className="text-gray-300" style={{ fontFamily: 'Poppins, sans-serif' }}>Sold</span>
           </div>
