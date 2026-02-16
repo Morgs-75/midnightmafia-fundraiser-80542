@@ -112,8 +112,8 @@ export function PrizeDrawnPopup({ drawDate, drawTime }: PrizeDrawnPopupProps) {
                 </motion.div>
 
                 {/* Title */}
-                <motion.h2 
-                  className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 mb-8 tracking-tight leading-tight"
+                <motion.h2
+                  className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 mb-6 tracking-tight leading-tight"
                   style={{ fontFamily: 'Bebas Neue, sans-serif' }}
                   animate={{
                     textShadow: [
@@ -124,12 +124,12 @@ export function PrizeDrawnPopup({ drawDate, drawTime }: PrizeDrawnPopupProps) {
                   }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
-                  Prize Drawn
+                  Prize Draw
                 </motion.h2>
 
-                {/* Date & Time - MASSIVE */}
-                <motion.div 
-                  className="bg-black/60 rounded-3xl py-8 px-10 border-4 border-yellow-400/50 mb-8"
+                {/* Message - MASSIVE */}
+                <motion.div
+                  className="bg-black/60 rounded-3xl py-8 px-6 md:px-10 border-4 border-yellow-400/50 mb-8"
                   animate={{
                     scale: [1, 1.03, 1],
                     borderColor: [
@@ -140,26 +140,20 @@ export function PrizeDrawnPopup({ drawDate, drawTime }: PrizeDrawnPopupProps) {
                   }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
-                  <div 
-                    className="text-5xl md:text-7xl font-black text-white mb-3 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]"
-                    style={{ fontFamily: 'Bebas Neue, sans-serif' }}
-                  >
-                    {drawDate}
-                  </div>
-                  <motion.div 
-                    className="text-4xl md:text-6xl font-black text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.8)]"
+                  <motion.div
+                    className="text-3xl md:text-5xl font-black text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] leading-tight"
                     style={{ fontFamily: 'Bebas Neue, sans-serif' }}
                     animate={{
                       scale: [1, 1.05, 1],
                     }}
                     transition={{ duration: 1.5, repeat: Infinity }}
                   >
-                    {drawTime}
+                    As Soon As All<br />Numbers Are Sold!
                   </motion.div>
                 </motion.div>
 
                 {/* Sparkle text - BIGGER */}
-                <motion.p 
+                <motion.p
                   className="text-lg md:text-xl text-purple-200 font-bold"
                   style={{ fontFamily: 'Poppins, sans-serif' }}
                   animate={{
