@@ -21,11 +21,11 @@ export function ThankYouModal({ isOpen, displayName, onClose }: ThankYouModalPro
   }, [isOpen]);
 
   const handleShare = async () => {
-    const shareText = "I am a proud supporter of Midnight Mafia trip to the World Cheer Competition. Any assistance you may be able to provide would go a long way!";
-    const shareUrl = window.location.href;
+    const shareText = "I just supported Midnight Mafia Cheer on their journey to Worlds 2026! 💜⭐ Help them reach their goal!";
+    const shareUrl = typeof window !== "undefined" ? window.location.origin : "https://midnightmafia.au";
     const fullMessage = `${shareText}\n\n${shareUrl}`;
 
-    // Try Web Share API first (works great on mobile)
+    // Try Web Share API first (works great on mobile for Instagram stories)
     if (navigator.share) {
       try {
         await navigator.share({
@@ -33,13 +33,25 @@ export function ThankYouModal({ isOpen, displayName, onClose }: ThankYouModalPro
           text: fullMessage,
         });
       } catch (err) {
-        // User cancelled or error occurred
+        // User cancelled or error occurred - fallback to copying link
         console.log("Share cancelled or failed:", err);
+        try {
+          await navigator.clipboard.writeText(fullMessage);
+          alert("Message and link copied! Paste it in your Instagram story 💜");
+        } catch (clipErr) {
+          console.log("Clipboard failed:", clipErr);
+        }
       }
     } else {
-      // Fallback: Open mailto link
-      const mailtoLink = `mailto:?subject=${encodeURIComponent("Support Midnight Mafia Cheer")}&body=${encodeURIComponent(fullMessage)}`;
-      window.location.href = mailtoLink;
+      // Fallback: Copy to clipboard
+      try {
+        await navigator.clipboard.writeText(fullMessage);
+        alert("Message and link copied! Paste it in your Instagram story 💜");
+      } catch (clipErr) {
+        // Last resort: Open mailto
+        const mailtoLink = `mailto:?subject=${encodeURIComponent("Support Midnight Mafia Cheer")}&body=${encodeURIComponent(fullMessage)}`;
+        window.location.href = mailtoLink;
+      }
     }
   };
 
@@ -315,13 +327,9 @@ export function ThankYouModal({ isOpen, displayName, onClose }: ThankYouModalPro
                           </motion.div>
 
                           <span className="relative z-10 text-base font-bold">
-                            📱 Share Story
+                            📱 Share on Instagram Story
                           </span>
                         </motion.button>
-                        
-                        <p className="text-xs text-purple-200 mt-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                          We would be grateful if you could share this on Instagram
-                        </p>
                       </motion.div>
                     </>
                   )}
