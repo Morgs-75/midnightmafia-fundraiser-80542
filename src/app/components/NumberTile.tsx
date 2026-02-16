@@ -10,6 +10,7 @@ interface NumberTileProps {
 
 export function NumberTile({ data, isSelected, onSelect }: NumberTileProps) {
   const { number, status, displayName, isTeamNumber } = data;
+  // Force cache bust - updated colors to pink/purple
 
   const getStatusStyles = () => {
     if (isTeamNumber) {
