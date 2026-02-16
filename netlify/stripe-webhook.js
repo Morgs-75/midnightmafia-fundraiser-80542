@@ -120,14 +120,15 @@ export async function handler(event) {
       console.log('   Display name:', hold.display_name);
       console.log('   Email:', hold.email);
 
-      // Mark numbers as sold
+      // Mark numbers as sold (and clear promo_code since this is a paid purchase)
       const { data: updatedNumbers, error: updateError } = await supabase
         .from('numbers')
         .update({
           status: 'sold',
           display_name: hold.display_name,
           message: hold.message,
-          hold_expires_at: null
+          hold_expires_at: null,
+          promo_code: null // Clear any promo code since this is a paid purchase
         })
         .eq('board_id', hold.board_id)
         .eq('status', 'held')
