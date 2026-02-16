@@ -119,9 +119,11 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
           {number}
         </span>
         
-        {status === "sold" && displayName && !isTeamNumber && (
-          <span className="text-xs mt-1 truncate max-w-full px-1 text-pink-300/80" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            {displayName}
+        {status === "sold" && (isTeamNumber || displayName) && (
+          <span className={`text-xs mt-1 truncate max-w-full px-1 ${
+            isTeamNumber ? "text-purple-200/90 font-bold" : "text-pink-300/80"
+          }`} style={{ fontFamily: 'Poppins, sans-serif' }}>
+            {isTeamNumber ? "TEAM" : displayName}
           </span>
         )}
       </div>
