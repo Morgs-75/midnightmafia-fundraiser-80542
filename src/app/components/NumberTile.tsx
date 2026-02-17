@@ -67,9 +67,14 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
   return (
     <motion.button
       onClick={handleClick}
-      className={`relative aspect-square rounded-lg transition-all duration-200 ${getStatusStyles()} ${
+      className={`relative aspect-square rounded-lg transition-all duration-200 overflow-hidden ${getStatusStyles()} ${
         isSold ? 'cursor-pointer hover:scale-105' : ''
       }`}
+      style={{
+        backgroundImage: 'url(/Jemma.JPG)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
       animate={
         isClickable && !isSelected
           ? {
@@ -103,14 +108,17 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
           : {}
       }
     >
+      {/* Dark overlay to ensure text visibility */}
+      <div className="absolute inset-0 bg-black/50 rounded-lg"></div>
+
       {/* Sparkle for regular sold numbers */}
       {status === "sold" && !isTeamNumber && (
-        <div className="absolute -top-1 -right-1">
+        <div className="absolute -top-1 -right-1 z-10">
           <Sparkles className="w-4 h-4 text-pink-400" />
         </div>
       )}
 
-      <div className="flex flex-col items-center justify-center h-full p-2">
+      <div className="relative z-10 flex flex-col items-center justify-center h-full p-2">
         <span
           className={`text-2xl md:text-3xl ${
             isTeamNumber
