@@ -70,11 +70,15 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
       className={`relative aspect-square rounded-lg transition-all duration-200 overflow-hidden ${getStatusStyles()} ${
         isSold ? 'cursor-pointer hover:scale-105' : ''
       }`}
-      style={{
-        backgroundImage: 'url(/Jemma.JPG)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
+      style={
+        isSold
+          ? {
+              backgroundImage: 'url(/Jemma.JPG)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }
+          : {}
+      }
       animate={
         isClickable && !isSelected
           ? {
@@ -108,8 +112,10 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
           : {}
       }
     >
-      {/* Dark overlay to ensure text visibility */}
-      <div className="absolute inset-0 bg-black/50 rounded-lg"></div>
+      {/* Dark overlay to ensure text visibility - only on sold numbers with photo */}
+      {isSold && (
+        <div className="absolute inset-0 bg-black/50 rounded-lg"></div>
+      )}
 
       {/* Sparkle for regular sold numbers */}
       {status === "sold" && !isTeamNumber && (
