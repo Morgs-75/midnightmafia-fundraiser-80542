@@ -29,3 +29,9 @@
   from = "/bingo"
   to = "/"
   status = 301
+
+# SPA catch-all: send all other requests to index.html for client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
