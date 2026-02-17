@@ -47,7 +47,7 @@ export function PulsatingStats({ numbers }: PulsatingStatsProps) {
       icon: <Zap className="w-4 h-4" />,
       value: "LIVE",
       label: "ACTIVE",
-      color: "from-blue-900 to-blue-700"
+      color: "from-blue-700 to-blue-500"
     },
   ];
 
