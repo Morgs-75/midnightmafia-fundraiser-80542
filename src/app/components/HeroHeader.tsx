@@ -73,7 +73,7 @@ export function HeroHeader({ drawDate }: HeroHeaderProps) {
               <span
                 key={i}
                 className="mx-16 text-yellow-400 text-7xl font-black"
-                style={{ fontFamily: 'Bebas Neue, sans-serif' }}
+                style={{ fontFamily: 'Bebas Neue, sans-serif', textShadow: '0 0 10px rgba(250,204,21,0.9), 0 0 30px rgba(250,204,21,0.6), 0 0 60px rgba(250,204,21,0.3)' }}
               >
                 🏆 WIN $500
               </span>
