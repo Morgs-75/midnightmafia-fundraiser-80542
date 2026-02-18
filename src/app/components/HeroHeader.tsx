@@ -55,19 +55,29 @@ export function HeroHeader({ drawDate }: HeroHeaderProps) {
       <div className="absolute inset-0 bg-gradient-to-b from-purple-600/10 to-transparent pointer-events-none" />
       
       <div className="relative">
-        {/* LOUD PRIZE BANNER */}
-        <div className="mb-6 relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 blur-xl opacity-50 animate-pulse" />
-          <div className="relative bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 rounded-2xl py-4 px-6 border-4 border-yellow-300 shadow-2xl shadow-yellow-500/50 animate-pulse">
-            <div className="text-xs md:text-sm text-yellow-900 font-bold mb-1" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              🏆 GRAND PRIZE 🏆
-            </div>
-            <div className="text-5xl md:text-7xl font-black text-yellow-900 tracking-tight" style={{ fontFamily: 'Bebas Neue, sans-serif', textShadow: '2px 2px 0px rgba(0,0,0,0.1)', fontWeight: 900, letterSpacing: '1px' }}>
-              WIN $500
-            </div>
-            <div className="text-xs md:text-sm text-yellow-900 font-bold mt-1" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              ⚡ ONE LUCKY NUMBER TAKES ALL ⚡
-            </div>
+        {/* SCROLLING PRIZE BANNER */}
+        <style>{`
+          @keyframes ticker {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          .ticker-inner {
+            display: inline-flex;
+            animation: ticker 18s linear infinite;
+            white-space: nowrap;
+          }
+        `}</style>
+        <div className="w-full overflow-hidden bg-black border-y-2 border-yellow-400 py-3 mb-6">
+          <div className="ticker-inner">
+            {Array(20).fill(null).map((_, i) => (
+              <span
+                key={i}
+                className="mx-12 text-yellow-400 text-4xl font-black"
+                style={{ fontFamily: 'Bebas Neue, sans-serif' }}
+              >
+                🏆 WIN $500
+              </span>
+            ))}
           </div>
         </div>
 
