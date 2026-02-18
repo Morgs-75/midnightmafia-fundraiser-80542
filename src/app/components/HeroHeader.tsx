@@ -63,7 +63,7 @@ export function HeroHeader({ drawDate }: HeroHeaderProps) {
           }
           .ticker-inner {
             display: inline-flex;
-            animation: ticker 60s linear infinite;
+            animation: ticker 66s linear infinite;
             white-space: nowrap;
           }
         `}</style>
