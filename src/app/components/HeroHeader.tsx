@@ -74,7 +74,7 @@ export function HeroHeader({ drawDate }: HeroHeaderProps) {
             animation: glow-pulse 2s ease-in-out infinite;
           }
         `}</style>
-        <div className="w-full overflow-hidden bg-black border-y-4 border-yellow-400 py-11 mb-6">
+        <div className="w-full overflow-hidden bg-black border-y-4 border-yellow-400 py-16 mb-6">
           <div className="ticker-inner">
             {Array(20).fill(null).map((_, i) => (
               <span
