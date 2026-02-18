@@ -67,8 +67,8 @@ export function HeroHeader({ drawDate }: HeroHeaderProps) {
             white-space: nowrap;
           }
           @keyframes glow-pulse {
-            0%, 100% { text-shadow: 0 0 10px rgba(250,204,21,0.9), 0 0 30px rgba(250,204,21,0.6), 0 0 60px rgba(250,204,21,0.3); }
-            50%       { text-shadow: 0 0 20px rgba(250,204,21,1),   0 0 60px rgba(250,204,21,0.9), 0 0 120px rgba(250,204,21,0.6); }
+            0%, 100% { filter: drop-shadow(0 0 6px rgba(250,204,21,0.8)) drop-shadow(0 0 20px rgba(250,204,21,0.5)) drop-shadow(0 0 40px rgba(250,204,21,0.25)); }
+            50%       { filter: drop-shadow(0 0 12px rgba(250,204,21,1))  drop-shadow(0 0 40px rgba(250,204,21,0.8)) drop-shadow(0 0 80px rgba(250,204,21,0.5)); }
           }
           .ticker-text {
             animation: glow-pulse 2s ease-in-out infinite;
