@@ -33,7 +33,7 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
     else if (isSold && onViewMessage) onViewMessage(data);
   };
 
-  const base = "aspect-square flex items-center justify-center rounded-lg select-none relative overflow-hidden";
+  const base = "aspect-square flex items-center justify-center rounded-lg select-none relative";
 
   // Non-sold tiles: flat div, no 3D, pixel-perfect rendering
   if (!isSold) {
