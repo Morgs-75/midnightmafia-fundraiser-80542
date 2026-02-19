@@ -437,19 +437,19 @@ export function BingoGame() {
           {CONFIG.contactPhone} or {CONFIG.contactEmail}
         </p>
         <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-sm" style={{ fontFamily: "Poppins, sans-serif" }}>
-          <button
-            onClick={() => setIsTermsOpen(true)}
+          <a
+            href="/terms-of-service"
             className="text-purple-400 hover:text-purple-300 underline underline-offset-2 transition-colors"
           >
             Terms of Service
-          </button>
+          </a>
           <span className="text-gray-700">·</span>
-          <button
-            onClick={() => setIsPrivacyOpen(true)}
+          <a
+            href="/privacy-policy"
             className="text-purple-400 hover:text-purple-300 underline underline-offset-2 transition-colors"
           >
             Privacy Policy
-          </button>
+          </a>
           <span className="text-gray-700">·</span>
           <a
             href="/customer-support"
