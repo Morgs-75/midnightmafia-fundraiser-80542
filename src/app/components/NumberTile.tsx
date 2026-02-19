@@ -10,9 +10,9 @@ interface NumberTileProps {
 
 // Three colour schemes cycling across tiles
 const PALETTES = [
-  { bg: "linear-gradient(135deg, #9333ea, #581c87)", glow: "147,51,234",  text: "#f3e8ff" }, // purple
-  { bg: "linear-gradient(135deg, #ec4899, #9d174d)", glow: "236,72,153",  text: "#fce7f3" }, // pink
-  { bg: "linear-gradient(135deg, #0ea5e9, #075985)", glow: "14,165,233",  text: "#e0f2fe" }, // sky blue
+  { bg: "linear-gradient(135deg, rgba(192,162,255,0.65), rgba(167,139,250,0.45))", glow: "192,162,255",  text: "#f5f3ff" }, // light purple
+  { bg: "linear-gradient(135deg, rgba(251,182,225,0.65), rgba(244,114,182,0.45))", glow: "251,182,225",  text: "#fdf2f8" }, // light pink
+  { bg: "linear-gradient(135deg, rgba(147,220,252,0.65), rgba(56,189,248,0.45))",  glow: "147,220,252",  text: "#f0f9ff" }, // light sky
 ];
 
 export function NumberTile({ data, isSelected, onSelect, onViewMessage }: NumberTileProps) {
