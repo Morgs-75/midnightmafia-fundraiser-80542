@@ -129,20 +129,20 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
             position: "absolute", inset: 0,
             backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden",
             transform: "rotateY(180deg)",
-            background: "linear-gradient(135deg, #9d174d, #500724)",
-            border: "1px solid rgba(249,168,212,0.5)",
-            boxShadow: "0 0 10px rgba(249,168,212,0.3)",
+            background: palette.bg,
+            border: `1px solid rgba(${glowRgb},0.9)`,
+            boxShadow: `0 0 8px rgba(${glowRgb},0.7), 0 0 18px rgba(${glowRgb},0.4)`,
             borderRadius: "6px",
             display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
             gap: "2px", cursor: "pointer",
           }}
         >
-          <span style={{ ...numStyle, color: "#fce7f3" }}>{number}</span>
+          <span style={{ ...numStyle, color: palette.text }}>{number}</span>
           {displayName && (
             <span style={{
               fontFamily: "Poppins, sans-serif",
               fontSize: "clamp(0.3rem, 1vw, 0.5rem)",
-              color: "#f9a8d4", lineHeight: 1.2,
+              color: palette.text, lineHeight: 1.2,
               textAlign: "center", maxWidth: "90%",
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
             }}>
