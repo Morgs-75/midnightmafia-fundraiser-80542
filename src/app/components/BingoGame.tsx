@@ -14,6 +14,7 @@ import { MessageBubble } from "./MessageBubble";
 import { QRCodeModal } from "./QRCodeModal";
 import { ShareQRButton } from "./ShareQRButton";
 import { WelcomeHint } from "./WelcomeHint";
+import { TermsModal } from "./TermsModal";
 import { GoalReachedPopup } from "./GoalReachedPopup";
 import { NumberData } from "../types";
 import {
@@ -100,6 +101,7 @@ export function BingoGame() {
 
   // QR Code modal state
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
+  const [isTermsOpen, setIsTermsOpen] = useState(false);
   const currentUrl =
     typeof window !== "undefined"
       ? window.location.origin
@@ -432,7 +434,16 @@ export function BingoGame() {
           Payments secured by Stripe · Questions? Contact{" "}
           {CONFIG.contactPhone} or {CONFIG.contactEmail}
         </p>
+        <button
+          onClick={() => setIsTermsOpen(true)}
+          className="mt-4 text-sm text-purple-400 hover:text-purple-300 underline underline-offset-2 transition-colors"
+          style={{ fontFamily: "Poppins, sans-serif" }}
+        >
+          Terms of Service
+        </button>
       </footer>
+
+      <TermsModal isOpen={isTermsOpen} onClose={() => setIsTermsOpen(false)} />
 
       {/* Checkout Components */}
       <CheckoutBar
