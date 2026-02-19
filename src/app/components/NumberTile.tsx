@@ -74,15 +74,17 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
       <motion.div
         onClick={handleClick}
         className="aspect-square flex items-center justify-center rounded-md select-none cursor-pointer"
-        style={{
-          background: "linear-gradient(135deg, #fbbf24, #f59e0b)",
-          border: "2px solid #fde68a",
-          filter: "drop-shadow(0 0 8px rgba(251,191,36,0.8)) drop-shadow(0 0 20px rgba(251,191,36,0.4))",
+        style={{ background: "#000000", border: "2px solid rgba(255,255,255,0.9)" }}
+        animate={{
+          filter: [
+            "drop-shadow(0 0 4px rgba(255,255,255,0.6)) drop-shadow(0 0 10px rgba(255,255,255,0.3))",
+            "drop-shadow(0 0 10px rgba(255,255,255,1)) drop-shadow(0 0 25px rgba(255,255,255,0.6))",
+            "drop-shadow(0 0 4px rgba(255,255,255,0.6)) drop-shadow(0 0 10px rgba(255,255,255,0.3))",
+          ],
         }}
-        animate={{ scale: [1, 1.08, 1] }}
         transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
       >
-        <span style={{ ...numStyle, color: "#1c1917" }}>{number}</span>
+        <span style={{ ...numStyle, color: "#ffffff" }}>{number}</span>
       </motion.div>
     );
   }
