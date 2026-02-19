@@ -1,10 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { NumberData } from "../types";
 import { NumberTile } from "./NumberTile";
 import { MessageModal } from "./MessageModal";
 import { Sparkles, Circle } from "lucide-react";
-import { generateTabMap, getPuzzlePath } from "../../lib/puzzleUtils";
 
 interface NumberBoardProps {
   numbers: NumberData[];
@@ -12,25 +11,9 @@ interface NumberBoardProps {
   onSelectNumber: (number: number) => void;
 }
 
-const COLS = 10;
-const ROWS = 20;
-
 export function NumberBoard({ numbers, selectedNumbers, onSelectNumber }: NumberBoardProps) {
   const [selectedMessage, setSelectedMessage] = useState<NumberData | null>(null);
   const soldCount = numbers.filter(n => n.status === "sold").length;
-
-  // Pre-compute tab map once (deterministic — no re-render on every tick)
-  const tabMap = useMemo(() => generateTabMap(COLS, ROWS), []);
-
-  // Pre-compute all 200 SVG paths
-  const paths = useMemo(() =>
-    numbers.map(n => {
-      const col = (n.number - 1) % COLS;
-      const row = Math.floor((n.number - 1) / COLS);
-      return getPuzzlePath(col, row, tabMap, COLS, ROWS);
-    }),
-    [numbers, tabMap]
-  );
 
   return (
     <section className="px-4 py-8">
@@ -62,28 +45,18 @@ export function NumberBoard({ numbers, selectedNumbers, onSelectNumber }: Number
       {/* Board wrapper — relative for overlay, overflow:visible for puzzle tabs */}
       <div className="relative max-w-4xl mx-auto">
         <div
-          className="grid grid-cols-5 md:grid-cols-10 gap-0"
-          style={{ overflow: "visible", backgroundColor: "#05050f" }}
+          className="grid grid-cols-10 gap-1"
           data-number-board
         >
-          {numbers.map((numberData, idx) => {
-            const col = (numberData.number - 1) % COLS;
-            const row = Math.floor((numberData.number - 1) / COLS);
-            return (
-              <NumberTile
-                key={numberData.number}
-                data={numberData}
-                isSelected={selectedNumbers.includes(numberData.number)}
-                onSelect={onSelectNumber}
-                onViewMessage={setSelectedMessage}
-                col={col}
-                row={row}
-                path={paths[idx]}
-                totalCols={COLS}
-                totalRows={ROWS}
-              />
-            );
-          })}
+          {numbers.map((numberData) => (
+            <NumberTile
+              key={numberData.number}
+              data={numberData}
+              isSelected={selectedNumbers.includes(numberData.number)}
+              onSelect={onSelectNumber}
+              onViewMessage={setSelectedMessage}
+            />
+          ))}
         </div>
 
         {/* "Thank You" overlay — fades in when all 200 are sold */}

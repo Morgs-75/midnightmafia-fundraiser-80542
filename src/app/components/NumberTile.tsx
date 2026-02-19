@@ -1,183 +1,103 @@
 import { motion } from "motion/react";
 import { NumberData } from "../types";
-import { useState, useEffect } from "react";
 
 interface NumberTileProps {
   data: NumberData;
   isSelected: boolean;
   onSelect: (number: number) => void;
   onViewMessage?: (data: NumberData) => void;
-  col: number;
-  row: number;
-  path: string;
-  totalCols?: number;
-  totalRows?: number;
 }
 
-// Pastel colour palette
-const COLORS = {
-  available: { gradTop: "#5b21b6", gradBot: "#0f0520", stroke: "#c084fc", glowRgb: "192,132,252", text: "#ede9fe" },
-  selected:  { gradTop: "#7c3aed", gradBot: "#2e1065", stroke: "#a855f7", glowRgb: "168,85,247",  text: "#ffffff" },
-  sold:      { gradTop: "#9d174d", gradBot: "#200010", stroke: "#f9a8d4", glowRgb: "249,168,212", text: "#fce7f3" },
-  held:      { gradTop: "#1f2937", gradBot: "#080c12", stroke: "#374151", glowRgb: null,           text: "#4b5563" },
-};
-
-export function NumberTile({
-  data,
-  isSelected,
-  onSelect,
-  onViewMessage,
-  col,
-  row,
-  path,
-  totalCols = 10,
-  totalRows = 20,
-}: NumberTileProps) {
+export function NumberTile({ data, isSelected, onSelect, onViewMessage }: NumberTileProps) {
   const { number, status, displayName } = data;
-
-  const [timeOnPage, setTimeOnPage] = useState(0);
-  useEffect(() => {
-    const interval = setInterval(() => setTimeOnPage(p => p + 1), 10000);
-    return () => clearInterval(interval);
-  }, []);
 
   const isClickable = status === "available";
   const isSold      = status === "sold";
   const isHeld      = status === "held";
 
-  const scheme = isSold     ? COLORS.sold
-    : isHeld    ? COLORS.held
-    : isSelected ? COLORS.selected
-    : COLORS.available;
-
-  // Glow grows more urgent over time
-  const pulseDelay   = (number * 1.618) % 4;
-  const repeatDelay  = Math.max(0.5, 3 - timeOnPage * 0.2);
-  const glowPeak     = Math.min(0.85, 0.5 + timeOnPage * 0.03);
-
-  const glowFilter = (intensity: number) => scheme.glowRgb
-    ? `drop-shadow(0 0 4px rgba(${scheme.glowRgb},${intensity})) drop-shadow(0 0 14px rgba(${scheme.glowRgb},${intensity * 0.5})) drop-shadow(0 0 28px rgba(${scheme.glowRgb},${intensity * 0.2}))`
-    : "none";
-
   const handleClick = () => {
-    if (isClickable)           onSelect(number);
+    if (isClickable)                  onSelect(number);
     else if (isSold && onViewMessage) onViewMessage(data);
   };
 
-  const zIndex = isSold ? 3 : isHeld ? 2 : 1;
-
-  // Unique gradient IDs scoped per tile
-  const gradId  = `gf-${number}`;
-  const glossId = `gl-${number}`;
+  // Base tile classes
+  const base = "aspect-square flex items-center justify-center rounded-lg cursor-pointer select-none relative overflow-hidden transition-transform";
 
   return (
-    <div
-      style={{ perspective: "600px", overflow: "visible", zIndex }}
-      className="aspect-square relative"
-      onClick={handleClick}
-    >
+    <div style={{ perspective: "600px" }} className="aspect-square">
       <motion.div
         animate={{ rotateY: isSold ? 180 : 0 }}
-        transition={{ duration: 0.7, ease: "easeInOut" }}
-        style={{ width: "100%", height: "100%", position: "relative", transformStyle: "preserve-3d", overflow: "visible" }}
+        transition={{ duration: 0.6, ease: "easeInOut" }}
+        style={{ width: "100%", height: "100%", position: "relative", transformStyle: "preserve-3d" }}
       >
-        {/* ── FRONT FACE ── */}
-        <div style={{ position: "absolute", inset: 0, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", overflow: "visible" }}>
-          <svg viewBox="0 0 100 100" width="100%" height="100%" style={{ overflow: "visible", display: "block" }}>
-            <defs>
-              {/* Diagonal gradient: top-left lighter → bottom-right near-black */}
-              <linearGradient id={gradId} x1="0" y1="0" x2="60" y2="100" gradientUnits="userSpaceOnUse">
-                <stop offset="0%"   stopColor={scheme.gradTop} />
-                <stop offset="100%" stopColor={scheme.gradBot} />
-              </linearGradient>
-              {/* Gloss: white sheen fading from top */}
-              <linearGradient id={glossId} x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-                <stop offset="0%"   stopColor="white" stopOpacity="0.18" />
-                <stop offset="50%"  stopColor="white" stopOpacity="0.04" />
-                <stop offset="100%" stopColor="white" stopOpacity="0"    />
-              </linearGradient>
-            </defs>
+        {/* FRONT */}
+        <div
+          onClick={handleClick}
+          style={{ position: "absolute", inset: 0, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
+          className={`
+            ${base}
+            ${isHeld
+              ? "bg-gray-900 border border-gray-800 cursor-not-allowed opacity-40"
+              : isSelected
+              ? "bg-gradient-to-br from-violet-500 to-purple-700 border-2 border-violet-300 shadow-lg shadow-violet-500/40 scale-105"
+              : "bg-gradient-to-br from-purple-900 to-indigo-950 border border-purple-700/50 hover:border-purple-400 hover:scale-105"
+            }
+          `}
+        >
+          {/* Glow pulse for available tiles */}
+          {isClickable && !isSelected && (
+            <motion.div
+              className="absolute inset-0 rounded-lg"
+              animate={{ opacity: [0, 0.15, 0] }}
+              transition={{ duration: 2.5, repeat: Infinity, delay: (number * 1.618) % 4 }}
+              style={{ background: "radial-gradient(circle, rgba(192,132,252,1) 0%, transparent 70%)" }}
+            />
+          )}
 
-            {/* Base fill — animated glow for available tiles */}
-            {isClickable && !isSelected ? (
-              <motion.path
-                d={path}
-                fill={`url(#${gradId})`}
-                stroke={scheme.stroke}
-                strokeWidth="2"
-                animate={{
-                  filter: [
-                    glowFilter(0.3),
-                    glowFilter(glowPeak),
-                    glowFilter(0.3),
-                  ],
-                }}
-                transition={{ duration: 2.5, repeat: Infinity, delay: pulseDelay, repeatDelay }}
-              />
-            ) : (
-              <path
-                d={path}
-                fill={`url(#${gradId})`}
-                stroke={scheme.stroke}
-                strokeWidth="2"
-                opacity={isHeld ? 0.5 : 1}
-                style={isSelected ? { filter: glowFilter(0.7) } : undefined}
-              />
-            )}
-
-            {/* Gloss overlay */}
-            <path d={path} fill={`url(#${glossId})`} stroke="none" />
-
-            {/* Number */}
-            <text
-              x="50" y="50"
-              textAnchor="middle"
-              dominantBaseline="central"
-              fill={scheme.text}
-              fontSize="22"
-              style={{ fontFamily: "Bebas Neue, sans-serif" }}
-            >
-              {number}
-            </text>
-
-          </svg>
+          <span
+            className={`relative z-10 font-black leading-none
+              ${isSelected ? "text-white" : isHeld ? "text-gray-700" : "text-purple-200"}
+            `}
+            style={{
+              fontFamily: "Bebas Neue, sans-serif",
+              fontSize: "clamp(0.6rem, 2.5vw, 1.1rem)",
+            }}
+          >
+            {number}
+          </span>
         </div>
 
-        {/* ── BACK FACE ── */}
-        <div style={{ position: "absolute", inset: 0, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "rotateY(180deg)", overflow: "visible", filter: `drop-shadow(0 0 4px rgba(249,168,212,0.5)) drop-shadow(0 0 14px rgba(249,168,212,0.25)) drop-shadow(0 0 28px rgba(249,168,212,0.1))` }}>
-          <svg viewBox="0 0 100 100" width="100%" height="100%" style={{ overflow: "visible", display: "block" }}>
-            <defs>
-              <clipPath id={`back-clip-${number}`} clipPathUnits="userSpaceOnUse">
-                <path d={path} />
-              </clipPath>
-            </defs>
-
-            <g clipPath={`url(#back-clip-${number})`}>
-              <image
-                href="/assets/logo.png"
-                x={(col - (totalCols - 1)) * 100}
-                y={-row * 100}
-                width={totalCols * 100}
-                height={totalRows * 100}
-                preserveAspectRatio="none"
-              />
-            </g>
-
-            <path d={path} fill="rgba(0,0,0,0.35)" />
-
-            {displayName && (
-              <text
-                x="50" y="58"
-                textAnchor="middle"
-                dominantBaseline="central"
-                fill="white"
-                fontSize="9"
-                style={{ fontFamily: "Poppins, sans-serif" }}
-              >
-                {displayName}
-              </text>
-            )}
-          </svg>
+        {/* BACK (sold) */}
+        <div
+          onClick={handleClick}
+          style={{
+            position: "absolute", inset: 0,
+            backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden",
+            transform: "rotateY(180deg)",
+          }}
+          className={`${base} bg-gradient-to-br from-pink-900 to-rose-950 border border-pink-500/50 cursor-pointer flex-col gap-0.5
+            shadow-[0_0_10px_rgba(249,168,212,0.3)]`}
+        >
+          <span
+            className="text-pink-200 font-black leading-none"
+            style={{
+              fontFamily: "Bebas Neue, sans-serif",
+              fontSize: "clamp(0.6rem, 2.5vw, 1.1rem)",
+            }}
+          >
+            {number}
+          </span>
+          {displayName && (
+            <span
+              className="text-pink-300 leading-tight text-center px-0.5 truncate w-full text-center"
+              style={{
+                fontFamily: "Poppins, sans-serif",
+                fontSize: "clamp(0.35rem, 1.2vw, 0.55rem)",
+              }}
+            >
+              {displayName}
+            </span>
+          )}
         </div>
       </motion.div>
     </div>
