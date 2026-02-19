@@ -59,8 +59,8 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
               ${isSelected ? "text-white" : isHeld ? "text-gray-700" : "text-purple-200"}
             `}
             style={{
-              fontFamily: "Bebas Neue, sans-serif",
-              fontSize: "clamp(0.8rem, 3.5vw, 1.5rem)",
+              fontFamily: "Anton, sans-serif",
+              fontSize: "clamp(1.4rem, 6vw, 2.8rem)",
             }}
           >
             {number}
@@ -81,8 +81,8 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
           <span
             className="text-pink-200 font-black leading-none"
             style={{
-              fontFamily: "Bebas Neue, sans-serif",
-              fontSize: "clamp(0.8rem, 3.5vw, 1.5rem)",
+              fontFamily: "Anton, sans-serif",
+              fontSize: "clamp(1.4rem, 6vw, 2.8rem)",
             }}
           >
             {number}
