@@ -436,7 +436,7 @@ export function BingoGame() {
           Payments secured by Stripe · Questions? Contact{" "}
           {CONFIG.contactPhone} or {CONFIG.contactEmail}
         </p>
-        <div className="mt-4 flex items-center justify-center gap-4 text-sm" style={{ fontFamily: "Poppins, sans-serif" }}>
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-sm" style={{ fontFamily: "Poppins, sans-serif" }}>
           <button
             onClick={() => setIsTermsOpen(true)}
             className="text-purple-400 hover:text-purple-300 underline underline-offset-2 transition-colors"
@@ -450,6 +450,13 @@ export function BingoGame() {
           >
             Privacy Policy
           </button>
+          <span className="text-gray-700">·</span>
+          <a
+            href="/customer-support"
+            className="text-purple-400 hover:text-purple-300 underline underline-offset-2 transition-colors"
+          >
+            Customer Support
+          </a>
         </div>
       </footer>
 
