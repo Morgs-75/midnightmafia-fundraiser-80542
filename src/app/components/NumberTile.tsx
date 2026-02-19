@@ -8,19 +8,6 @@ interface NumberTileProps {
   onViewMessage?: (data: NumberData) => void;
 }
 
-const numStyle = {
-  fontFamily: "Poppins, sans-serif",
-  fontSize: "clamp(0.54rem, 2.3vw, 1.08rem)",
-  fontWeight: 900,
-  WebkitFontSmoothing: "antialiased" as const,
-  MozOsxFontSmoothing: "grayscale" as const,
-};
-
-const nameStyle = {
-  fontFamily: "Poppins, sans-serif",
-  fontSize: "clamp(0.35rem, 1.2vw, 0.55rem)",
-};
-
 export function NumberTile({ data, isSelected, onSelect, onViewMessage }: NumberTileProps) {
   const { number, status, displayName } = data;
 
@@ -33,34 +20,31 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
     else if (isSold && onViewMessage) onViewMessage(data);
   };
 
-  const base = "aspect-square flex items-center justify-center rounded-lg select-none relative";
-
-  // Non-sold tiles: flat div, no 3D, pixel-perfect rendering
+  // Non-sold tiles: flat div, no 3D transforms
   if (!isSold) {
     return (
       <div
         onClick={handleClick}
         className={`
-          ${base}
+          aspect-square flex items-center justify-center rounded-md
+          select-none cursor-pointer
           ${isHeld
-            ? "bg-gray-900 border border-gray-800 cursor-not-allowed opacity-40"
+            ? "bg-gray-800 border border-gray-700 opacity-40 cursor-not-allowed"
             : isSelected
-            ? "bg-gradient-to-br from-violet-500 to-purple-700 border-2 border-violet-300 shadow-lg shadow-violet-500/40 scale-105 cursor-pointer"
-            : "bg-gradient-to-br from-purple-900 to-indigo-950 border border-purple-700/50 hover:border-purple-400 hover:scale-105 cursor-pointer"
+            ? "bg-violet-600 border-2 border-violet-300 ring-2 ring-violet-400"
+            : "bg-purple-900 border border-purple-700 hover:bg-purple-800"
           }
         `}
       >
-        {isClickable && !isSelected && (
-          <motion.div
-            className="absolute inset-0 rounded-lg"
-            animate={{ opacity: [0, 0.15, 0] }}
-            transition={{ duration: 2.5, repeat: Infinity, delay: (number * 1.618) % 4 }}
-            style={{ background: "radial-gradient(circle, rgba(192,132,252,1) 0%, transparent 70%)" }}
-          />
-        )}
         <span
-          className={`relative z-10 font-black leading-none ${isSelected ? "text-white" : isHeld ? "text-gray-700" : "text-purple-200"}`}
-          style={numStyle}
+          style={{
+            fontFamily: "Poppins, sans-serif",
+            fontWeight: 900,
+            fontSize: "clamp(0.6rem, 2.8vw, 1.2rem)",
+            color: isHeld ? "#374151" : "#ffffff",
+            lineHeight: 1,
+            display: "block",
+          }}
         >
           {number}
         </span>
@@ -68,7 +52,7 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
     );
   }
 
-  // Sold tiles: 3D flip
+  // Sold tiles: 3D flip to pink back face
   return (
     <div style={{ perspective: "600px" }} className="aspect-square">
       <motion.div
@@ -79,20 +63,24 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
         {/* FRONT */}
         <div
           style={{ position: "absolute", inset: 0, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
-          className={`${base} bg-gradient-to-br from-purple-900 to-indigo-950 border border-purple-700/50`}
+          className="aspect-square flex items-center justify-center rounded-md bg-purple-900 border border-purple-700"
         >
-          <span className="text-purple-200 font-black leading-none" style={numStyle}>{number}</span>
+          <span style={{ fontFamily: "Poppins, sans-serif", fontWeight: 900, fontSize: "clamp(0.6rem, 2.8vw, 1.2rem)", color: "#ffffff", lineHeight: 1 }}>
+            {number}
+          </span>
         </div>
 
         {/* BACK */}
         <div
           onClick={handleClick}
           style={{ position: "absolute", inset: 0, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
-          className={`${base} bg-gradient-to-br from-pink-900 to-rose-950 border border-pink-500/50 cursor-pointer flex-col gap-0.5 shadow-[0_0_10px_rgba(249,168,212,0.3)]`}
+          className="aspect-square flex flex-col items-center justify-center rounded-md bg-pink-900 border border-pink-500 cursor-pointer gap-0.5"
         >
-          <span className="text-pink-200 font-black leading-none" style={numStyle}>{number}</span>
+          <span style={{ fontFamily: "Poppins, sans-serif", fontWeight: 900, fontSize: "clamp(0.6rem, 2.8vw, 1.2rem)", color: "#fce7f3", lineHeight: 1 }}>
+            {number}
+          </span>
           {displayName && (
-            <span className="text-pink-300 leading-tight text-center px-0.5 truncate w-full" style={nameStyle}>
+            <span style={{ fontFamily: "Poppins, sans-serif", fontSize: "clamp(0.3rem, 1vw, 0.5rem)", color: "#f9a8d4", lineHeight: 1.2, textAlign: "center", maxWidth: "90%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
               {displayName}
             </span>
           )}
