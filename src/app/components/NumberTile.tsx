@@ -60,7 +60,7 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
             `}
             style={{
               fontFamily: "Bebas Neue, sans-serif",
-              fontSize: "clamp(0.6rem, 2.5vw, 1.1rem)",
+              fontSize: "clamp(0.8rem, 3.5vw, 1.5rem)",
             }}
           >
             {number}
@@ -82,7 +82,7 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
             className="text-pink-200 font-black leading-none"
             style={{
               fontFamily: "Bebas Neue, sans-serif",
-              fontSize: "clamp(0.6rem, 2.5vw, 1.1rem)",
+              fontSize: "clamp(0.8rem, 3.5vw, 1.5rem)",
             }}
           >
             {number}
