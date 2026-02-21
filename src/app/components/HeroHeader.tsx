@@ -51,7 +51,7 @@ export function HeroHeader({ drawDate }: HeroHeaderProps) {
   };
 
   return (
-    <header className="relative px-4 py-8 text-center">
+    <header className="relative px-4 py-8 text-center" style={{ paddingBottom: '10px' }}>
       <div className="absolute inset-0 bg-gradient-to-b from-purple-600/10 to-transparent pointer-events-none" />
       
       <div className="relative">
