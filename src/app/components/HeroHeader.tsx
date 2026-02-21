@@ -163,16 +163,6 @@ export function HeroHeader({ drawDate }: HeroHeaderProps) {
           </p>
         </div>
         
-        <div className="mt-6 flex flex-wrap gap-3 justify-center text-sm text-gray-400">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full border-2 border-purple-500 bg-transparent" />
-            <span>Available</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-yellow-500 shadow-lg shadow-yellow-500/50" />
-            <span>Sold</span>
-          </div>
-        </div>
       </div>
     </header>
   );
