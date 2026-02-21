@@ -141,7 +141,8 @@ export function HeroHeader({ drawDate }: HeroHeaderProps) {
 
             {/* Best Deal - 5 for $100 */}
             <motion.div
-              className="bg-gradient-to-r from-green-900/50 to-emerald-900/50 rounded-xl p-4 pt-6 border-2 border-green-400/50 relative"
+              className="rounded-xl p-4 pt-6 border-2 relative"
+              style={{ background: '#ffff87', borderColor: '#000080' }}
               animate={{ rotate: [0, -2, 2, -2, 2, 0], scale: [1, 1.05, 1, 1.05, 1] }}
               transition={{ duration: 0.8, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }}
             >
@@ -153,13 +154,13 @@ export function HeroHeader({ drawDate }: HeroHeaderProps) {
               >
                 BEST VALUE
               </motion.div>
-              <p className="text-white text-lg font-extrabold mb-1 uppercase tracking-wide" style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 800 }}>
+              <p className="text-lg font-extrabold mb-1 uppercase tracking-wide" style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 800, color: '#000080' }}>
                 5 Numbers
               </p>
-              <p className="text-yellow-400 text-4xl font-black" style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 900 }}>
+              <p className="text-4xl font-black" style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 900, color: '#000080' }}>
                 $100
               </p>
-              <p className="text-gray-300 text-sm mt-1" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              <p className="text-sm mt-1" style={{ fontFamily: 'Poppins, sans-serif', color: '#000080' }}>
                 Save $25! (Regular $125)
               </p>
             </motion.div>
