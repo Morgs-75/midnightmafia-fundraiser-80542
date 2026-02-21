@@ -113,9 +113,12 @@ export function HeroHeader({ drawDate }: HeroHeaderProps) {
         
         {/* PRICING SECTION */}
         <div className="mt-8 max-w-3xl mx-auto">
-          <h3 className="text-2xl md:text-3xl text-yellow-400 mb-4 font-bold" style={{ fontFamily: 'Bebas Neue, sans-serif', fontWeight: 700, letterSpacing: '0.5px' }}>
+          <h3 className="text-2xl md:text-3xl text-yellow-400 mb-2 font-bold" style={{ fontFamily: 'Bebas Neue, sans-serif', fontWeight: 700, letterSpacing: '0.5px' }}>
             💰 Pricing 💰
           </h3>
+          <p className="text-center text-gray-300 text-base mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            Select your numbers directly from the board below!
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-xl mx-auto text-center">
             {/* Single */}
             <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-xl p-4 border border-purple-500/30">
@@ -157,9 +160,6 @@ export function HeroHeader({ drawDate }: HeroHeaderProps) {
           </div>
           <p className="text-center text-yellow-300 text-sm mt-4 font-semibold" style={{ fontFamily: 'Poppins, sans-serif' }}>
             ⚡ More numbers = Better odds of winning $500!
-          </p>
-          <p className="text-center text-gray-300 text-base mt-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            Select your numbers directly from the board below!
           </p>
         </div>
         
