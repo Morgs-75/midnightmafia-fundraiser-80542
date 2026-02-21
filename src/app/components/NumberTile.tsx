@@ -118,7 +118,7 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
       {displayName && (
         <span style={{
           fontFamily: "Poppins, sans-serif",
-          fontSize: "clamp(0.25rem, 0.85vw, 0.45rem)",
+          fontSize: "clamp(0.35rem, 1.2vw, 0.6rem)",
           color: "rgba(253,164,175,0.95)",
           lineHeight: 1.2,
           textAlign: "center",
