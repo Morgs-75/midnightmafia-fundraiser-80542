@@ -1,6 +1,5 @@
 import { motion } from "motion/react";
 import { Check } from "lucide-react";
-import { useState, useEffect } from "react";
 import { NumberData } from "../types";
 
 interface NumberTileProps {
@@ -33,28 +32,6 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
     else if (isSold && onViewMessage) onViewMessage(data);
   };
 
-  const [pickMeStage, setPickMeStage] = useState<null | 'text' | 'emoji'>(null);
-
-  useEffect(() => {
-    if (!isClickable) return;
-    let timeout: ReturnType<typeof setTimeout>;
-    const schedule = () => {
-      const delay = 6000 + Math.random() * 14000;
-      timeout = setTimeout(() => {
-        setPickMeStage('text');
-        timeout = setTimeout(() => {
-          setPickMeStage('emoji');
-          timeout = setTimeout(() => {
-            setPickMeStage(null);
-            schedule();
-          }, 1000);
-        }, 1200);
-      }, delay);
-    };
-    timeout = setTimeout(schedule, Math.random() * 10000);
-    return () => clearTimeout(timeout);
-  }, [isClickable]);
-
   const numStyle: React.CSSProperties = {
     fontFamily: "Poppins, sans-serif",
     fontWeight: 900,
@@ -83,20 +60,12 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
             `0 0 10px rgba(${glowRgb},0.9), 0 0 24px rgba(${glowRgb},0.5), inset 0 0 10px rgba(${glowRgb},0.1)`,
             `0 0 4px rgba(${glowRgb},0.4), 0 0 10px rgba(${glowRgb},0.2), inset 0 0 4px rgba(${glowRgb},0.05)`,
           ],
-          scale: [1, 1.06, 1],
-          rotate: [0, wiggleDelay % 2 === 0 ? 1.5 : -1.5, 0],
+          scale: [1, 1.02, 1],
+          rotate: [0, wiggleDelay % 2 === 0 ? 0.5 : -0.5, 0],
         }}
-        transition={{ duration: 2.5, repeat: Infinity, delay: pulseDelay, ease: "easeInOut" }}
+        transition={{ duration: 5, repeat: Infinity, delay: pulseDelay, ease: "easeInOut" }}
       >
-        {pickMeStage === 'text' ? (
-          <span style={{ fontFamily: "Poppins, sans-serif", fontWeight: 900, fontSize: "clamp(0.35rem, 1.6vw, 0.65rem)", color: "#ffffff", textAlign: "center", lineHeight: 1.2 }}>
-            Pick Me
-          </span>
-        ) : pickMeStage === 'emoji' ? (
-          <span style={{ fontSize: "clamp(0.8rem, 3vw, 1.4rem)", lineHeight: 1 }}>😢</span>
-        ) : (
-          <span style={numStyle}>{number}</span>
-        )}
+        <span style={numStyle}>{number}</span>
       </motion.div>
     );
   }
@@ -150,8 +119,7 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
       className="aspect-square flex flex-col items-center justify-center rounded-md select-none cursor-pointer"
       style={{
         background: "#000080",
-        border: "1px solid rgba(0,0,128,0.8)",
-        boxShadow: "0 0 8px rgba(0,0,128,0.5), 0 0 18px rgba(0,0,128,0.25)",
+        border: "1px solid #ffff87",
         gap: "2px",
       }}
     >

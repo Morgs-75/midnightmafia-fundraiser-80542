@@ -67,20 +67,20 @@ export function HeroHeader({ drawDate }: HeroHeaderProps) {
             white-space: nowrap;
           }
           @keyframes glow-pulse {
-            0%, 100% { filter: drop-shadow(0 0 6px rgba(250,204,21,0.8)) drop-shadow(0 0 20px rgba(250,204,21,0.5)) drop-shadow(0 0 40px rgba(250,204,21,0.25)); }
-            50%       { filter: drop-shadow(0 0 12px rgba(250,204,21,1))  drop-shadow(0 0 40px rgba(250,204,21,0.8)) drop-shadow(0 0 80px rgba(250,204,21,0.5)); }
+            0%, 100% { filter: drop-shadow(0 0 6px rgba(255,255,135,0.8)) drop-shadow(0 0 20px rgba(255,255,135,0.5)) drop-shadow(0 0 40px rgba(255,255,135,0.25)); }
+            50%       { filter: drop-shadow(0 0 12px rgba(255,255,135,1))  drop-shadow(0 0 40px rgba(255,255,135,0.8)) drop-shadow(0 0 80px rgba(255,255,135,0.5)); }
           }
           .ticker-text {
             animation: glow-pulse 2s ease-in-out infinite;
           }
         `}</style>
-        <div className="w-full overflow-hidden bg-black border-y-4 border-yellow-400 py-8 mb-6">
+        <div className="w-full overflow-hidden bg-black py-8 mb-6" style={{ borderTop: '4px solid #ffff87', borderBottom: '4px solid #ffff87' }}>
           <div className="ticker-inner">
             {Array(20).fill(null).map((_, i) => (
               <span
                 key={i}
-                className="ticker-text mx-16 text-yellow-400 text-5xl font-black"
-                style={{ fontFamily: 'Bebas Neue, sans-serif' }}
+                className="ticker-text mx-16 text-5xl font-black"
+                style={{ fontFamily: 'Bebas Neue, sans-serif', color: '#ffff87' }}
               >
                 🏆 Grand Prize $500
               </span>
