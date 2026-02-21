@@ -1,11 +1,11 @@
-import { Client, Environment } from 'square';
+import { SquareClient, SquareEnvironment } from 'square';
 import { randomUUID } from 'crypto';
 
-const client = new Client({
-  accessToken: process.env.SQUARE_ACCESS_TOKEN,
+const client = new SquareClient({
+  token: process.env.SQUARE_ACCESS_TOKEN,
   environment: process.env.SQUARE_ENVIRONMENT === 'sandbox'
-    ? Environment.Sandbox
-    : Environment.Production,
+    ? SquareEnvironment.Sandbox
+    : SquareEnvironment.Production,
 });
 
 export async function handler(event) {
@@ -25,12 +25,12 @@ export async function handler(event) {
 
     console.log('Creating Square payment link:', { holdId, quantity, amount });
 
-    const { result } = await client.checkoutApi.createPaymentLink({
+    const response = await client.checkout.paymentLinks.create({
       idempotencyKey: randomUUID(),
       quickPay: {
         name: `Fundraiser Number${quantity > 1 ? 's' : ''} (${quantity})`,
         priceMoney: {
-          amount: BigInt(amount), // amount in cents, already includes fee
+          amount: BigInt(amount), // amount in cents
           currency: 'AUD',
         },
         locationId: process.env.SQUARE_LOCATION_ID,
@@ -41,11 +41,18 @@ export async function handler(event) {
       paymentNote: holdId, // stored on Payment.note for webhook correlation
     });
 
-    console.log('✅ Square payment link created:', result.paymentLink.id);
+    const paymentLink = response.data?.paymentLink ?? response.paymentLink;
+
+    if (!paymentLink?.url) {
+      console.error('No payment link URL in response:', JSON.stringify(response, null, 2));
+      throw new Error('No payment link URL returned from Square');
+    }
+
+    console.log('✅ Square payment link created:', paymentLink.id);
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ url: result.paymentLink.url }),
+      body: JSON.stringify({ url: paymentLink.url }),
     };
   } catch (error) {
     console.error('Error creating Square payment link:', error);

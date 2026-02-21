@@ -19,12 +19,12 @@ export async function handler(event) {
     ? Buffer.from(event.body, 'base64').toString('utf8')
     : event.body;
 
-  const isValid = WebhooksHelper.isValidWebhookEventSignature(
-    body,
-    signature,
+  const isValid = await WebhooksHelper.verifySignature({
+    requestBody: body,
+    signatureHeader: signature,
     signatureKey,
     notificationUrl,
-  );
+  });
 
   if (!isValid) {
     console.error('⚠️ SECURITY: Square webhook signature verification failed');
