@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { X, Lock, Sparkles, Gift, TrendingUp, Zap, ChevronDown } from "lucide-react";
+import { X, Lock, Sparkles, Gift, ChevronDown } from "lucide-react";
 import { calculatePrice, calculateStripeFee, calculateTotalWithFees, PRICE_PER_NUMBER } from "../../lib/pricing";
 
 interface CheckoutModalProps {
@@ -16,7 +16,6 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [stayAnonymous, setStayAnonymous] = useState(false);
-  const [promoCode, setPromoCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMessageExpanded, setIsMessageExpanded] = useState(false);
   const [errors, setErrors] = useState<{
@@ -90,40 +89,6 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
       // Import board ID from config
       const { BOARD_ID } = await import('../../lib/supabase');
 
-      // Check if promo code is used
-      if (promoCode.trim().toUpperCase() === 'OUTLAWS') {
-        // Use promo code flow - skip Stripe, create purchase directly
-        const promoRes = await fetch('/.netlify/functions/create-promo-purchase', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            boardId: BOARD_ID,
-            numbers: selectedNumbers,
-            displayName: stayAnonymous ? 'Anonymous' : displayName.trim(),
-            email: email.trim(),
-            phone: phone.trim(),
-            message: message.trim(),
-            promoCode: 'OUTLAWS',
-          }),
-        });
-
-        if (!promoRes.ok) {
-          const errorText = await promoRes.text();
-          let errorMsg = '';
-          try { errorMsg = JSON.parse(errorText).error || ''; } catch {}
-          if (promoRes.status === 409) {
-            throw new Error(errorMsg || 'One or more of your selected numbers were just taken. Please refresh and try again.');
-          }
-          throw new Error(errorMsg || 'Failed to process promo code. Please try again.');
-        }
-
-        // Success! Reload to show updated board
-        alert('✅ Success! Your team numbers have been claimed.');
-        window.location.reload();
-        return;
-      }
-
-      // Normal payment flow
       // Step 1: Create hold
       const holdRes = await fetch('/.netlify/functions/create-hold', {
         method: 'POST',
@@ -392,26 +357,6 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
                     )}
                   </div>
 
-                  <div>
-                    <label htmlFor="promoCode" className="block text-sm font-medium text-gray-300 mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                      Promo Code <span className="text-gray-500 text-xs">(Optional - Team members only)</span>
-                    </label>
-                    <input
-                      id="promoCode"
-                      type="text"
-                      value={promoCode}
-                      onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-                      placeholder="Enter team code"
-                      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors uppercase"
-                      style={{ fontFamily: 'Poppins, sans-serif' }}
-                    />
-                    {promoCode.trim().toUpperCase() === 'OUTLAWS' && (
-                      <p className="mt-2 text-sm text-green-400 flex items-center gap-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                        ⭐ Team code valid! Your purchase will be FREE.
-                      </p>
-                    )}
-                  </div>
-
                   {/* Pricing Breakdown */}
                   <div className="space-y-3">
                     {savings > 0 && (
@@ -442,37 +387,18 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
                     {/* Payment Breakdown */}
                     <div className="px-4 py-3 bg-gray-800/50 rounded-lg border border-gray-700">
                       <div className="space-y-2 text-sm" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                        {promoCode.trim().toUpperCase() === 'OUTLAWS' ? (
-                          <>
-                            <div className="flex justify-between text-gray-300 line-through opacity-50">
-                              <span>Subtotal ({count} {count === 1 ? 'number' : 'numbers'})</span>
-                              <span>${subtotal.toFixed(2)}</span>
-                            </div>
-                            <div className="flex justify-between text-green-400 font-semibold">
-                              <span>Team Discount</span>
-                              <span>-${subtotal.toFixed(2)}</span>
-                            </div>
-                            <div className="flex justify-between text-white font-bold pt-2 border-t border-gray-600 text-xl">
-                              <span>Total</span>
-                              <span>$0.00</span>
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <div className="flex justify-between text-gray-300">
-                              <span>Subtotal ({count} {count === 1 ? 'number' : 'numbers'})</span>
-                              <span>${subtotal.toFixed(2)}</span>
-                            </div>
-                            <div className="flex justify-between text-gray-400 text-xs">
-                              <span>Square processing fee</span>
-                              <span>${stripeFee.toFixed(2)}</span>
-                            </div>
-                            <div className="flex justify-between text-white font-bold pt-2 border-t border-gray-600 text-base">
-                              <span>Total</span>
-                              <span>${total.toFixed(2)}</span>
-                            </div>
-                          </>
-                        )}
+                        <div className="flex justify-between text-gray-300">
+                          <span>Subtotal ({count} {count === 1 ? 'number' : 'numbers'})</span>
+                          <span>${subtotal.toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between text-gray-400 text-xs">
+                          <span>Square processing fee</span>
+                          <span>${stripeFee.toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between text-white font-bold pt-2 border-t border-gray-600 text-base">
+                          <span>Total</span>
+                          <span>${total.toFixed(2)}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -486,8 +412,6 @@ export function CheckoutModal({ isOpen, selectedNumbers, pricePerNumber, onClose
                     >
                       {isSubmitting ? (
                         <span>Processing...</span>
-                      ) : promoCode.trim().toUpperCase() === 'OUTLAWS' ? (
-                        <span>Claim your Team Number!</span>
                       ) : (
                         <span>Complete Purchase - ${total.toFixed(2)}</span>
                       )}

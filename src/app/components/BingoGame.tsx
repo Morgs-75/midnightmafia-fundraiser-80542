@@ -198,7 +198,7 @@ export function BingoGame() {
     setIsCheckoutOpen(true);
   };
 
-  // Note: Payment flow now redirects to Stripe and returns to success.html
+  // Note: Payment flow redirects to Square and returns to success.html
   // Numbers are updated via webhook + Supabase realtime
   // No need for manual state updates here
 
