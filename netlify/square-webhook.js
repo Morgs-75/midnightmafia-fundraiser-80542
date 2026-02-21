@@ -37,12 +37,17 @@ export async function handler(event) {
   const squareEvent = JSON.parse(body);
   console.log('✅ Square webhook received:', squareEvent.type);
 
-  // Only process completed payments
-  if (squareEvent.type !== 'payment.completed') {
+  // Only process payment.updated events where status is COMPLETED
+  if (squareEvent.type !== 'payment.updated') {
     return { statusCode: 200, body: JSON.stringify({ received: true, processed: false }) };
   }
 
   const payment = squareEvent.data?.object?.payment;
+
+  if (payment?.status !== 'COMPLETED') {
+    return { statusCode: 200, body: JSON.stringify({ received: true, processed: false, status: payment?.status }) };
+  }
+
   const holdId = payment?.note;
 
   if (!holdId) {
