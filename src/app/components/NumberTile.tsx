@@ -11,7 +11,6 @@ interface NumberTileProps {
 
 // Glow colours cycling across tiles
 const GLOWS = [
-  "255,255,135", // yellow #ffff87
   "236,72,153", // pink #ec4899
   "72,222,236", // blue #48deec
 ];
@@ -23,7 +22,7 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
   const isSold      = status === "sold";
   const isHeld      = status === "held";
 
-  const glowRgb    = GLOWS[number % 3];
+  const glowRgb    = GLOWS[number % 2];
   const pulseDelay  = (number * 1.618) % 3;
   const wiggleDelay = (number * 2.303) % 5;
 
@@ -43,8 +42,8 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
 
   const baseStyle: React.CSSProperties = {
     background: "transparent",
-    border: `1px solid rgba(${glowRgb},0.8)`,
-    boxShadow: `0 0 6px rgba(${glowRgb},0.5), 0 0 14px rgba(${glowRgb},0.25), inset 0 0 6px rgba(${glowRgb},0.05)`,
+    border: `1px solid #ffff87`,
+    boxShadow: `0 0 6px rgba(255,255,135,0.5), 0 0 14px rgba(255,255,135,0.25), inset 0 0 6px rgba(255,255,135,0.05)`,
   };
 
   // ── AVAILABLE tile ──────────────────────────────────────────────
@@ -56,9 +55,9 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
         style={baseStyle}
         animate={{
           boxShadow: [
-            `0 0 4px rgba(${glowRgb},0.4), 0 0 10px rgba(${glowRgb},0.2), inset 0 0 4px rgba(${glowRgb},0.05)`,
-            `0 0 10px rgba(${glowRgb},0.9), 0 0 24px rgba(${glowRgb},0.5), inset 0 0 10px rgba(${glowRgb},0.1)`,
-            `0 0 4px rgba(${glowRgb},0.4), 0 0 10px rgba(${glowRgb},0.2), inset 0 0 4px rgba(${glowRgb},0.05)`,
+            `0 0 4px rgba(255,255,135,0.4), 0 0 10px rgba(255,255,135,0.2), inset 0 0 4px rgba(255,255,135,0.05)`,
+            `0 0 10px rgba(255,255,135,0.9), 0 0 24px rgba(255,255,135,0.5), inset 0 0 10px rgba(255,255,135,0.1)`,
+            `0 0 4px rgba(255,255,135,0.4), 0 0 10px rgba(255,255,135,0.2), inset 0 0 4px rgba(255,255,135,0.05)`,
           ],
           scale: [1, 1.02, 1],
           rotate: [0, wiggleDelay % 2 === 0 ? 0.5 : -0.5, 0],
@@ -76,25 +75,26 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
       <motion.div
         onClick={handleClick}
         className="aspect-square flex items-center justify-center rounded-md select-none cursor-pointer"
-        style={{ background: "transparent", border: "2px solid rgba(255,255,255,0.9)" }}
+        style={{ background: "transparent", border: "2px solid #48ec56" }}
         animate={{
           boxShadow: [
-            "0 0 6px rgba(255,255,255,0.5), 0 0 14px rgba(255,255,255,0.25), inset 0 0 6px rgba(255,255,255,0.05)",
-            "0 0 14px rgba(255,255,255,1), 0 0 30px rgba(255,255,255,0.6), inset 0 0 14px rgba(255,255,255,0.15)",
-            "0 0 6px rgba(255,255,255,0.5), 0 0 14px rgba(255,255,255,0.25), inset 0 0 6px rgba(255,255,255,0.05)",
+            "0 0 8px rgba(72,236,86,0.6), 0 0 20px rgba(72,236,86,0.3), inset 0 0 8px rgba(72,236,86,0.1)",
+            "0 0 24px rgba(72,236,86,1), 0 0 60px rgba(72,236,86,0.8), 0 0 100px rgba(72,236,86,0.4), inset 0 0 20px rgba(72,236,86,0.2)",
+            "0 0 8px rgba(72,236,86,0.6), 0 0 20px rgba(72,236,86,0.3), inset 0 0 8px rgba(72,236,86,0.1)",
           ],
+          scale: [1, 1.03, 1],
         }}
-        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       >
         <div style={{
-          border: "2px solid #a3e635",
+          border: "2px solid #48ec56",
           borderRadius: "50%",
           padding: "clamp(2px, 0.5vw, 4px)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
         }}>
-          <Check style={{ color: "#a3e635", width: "clamp(1.2rem, 5vw, 2rem)", height: "clamp(1.2rem, 5vw, 2rem)", strokeWidth: 3 }} />
+          <Check style={{ color: "#48ec56", width: "clamp(1.2rem, 5vw, 2rem)", height: "clamp(1.2rem, 5vw, 2rem)", strokeWidth: 3 }} />
         </div>
       </motion.div>
     );
