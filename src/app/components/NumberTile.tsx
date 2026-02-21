@@ -123,7 +123,7 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
           lineHeight: 1,
           display: "block",
         }}>SOLD</span>
-      <span style={{ ...numStyle, fontSize: "clamp(0.5rem, 2.2vw, 1rem)" }}>{number}</span>
+      <span style={{ ...numStyle, fontSize: "clamp(0.4rem, 1.76vw, 0.8rem)" }}>{number}</span>
       {displayName && (
         <span style={{
           fontFamily: "Poppins, sans-serif",
