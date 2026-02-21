@@ -110,7 +110,7 @@ export function HeroHeader({ drawDate }: HeroHeaderProps) {
         <img
           src="/assets/team-photo.png"
           alt="Midnight Mafia team at AASCF Nationals"
-          className="w-full max-w-2xl mx-auto rounded-2xl shadow-2xl mb-4"
+          className="w-full max-w-2xl mx-auto rounded-2xl shadow-2xl mb-2"
         />
         
         <p className="text-lg md:text-xl text-gray-300 mx-auto" style={{ fontFamily: 'Poppins, sans-serif' }}>
@@ -118,7 +118,7 @@ export function HeroHeader({ drawDate }: HeroHeaderProps) {
         </p>
         
         {/* PRICING SECTION */}
-        <div className="mt-8 max-w-3xl mx-auto">
+        <div className="mt-3 max-w-3xl mx-auto">
           <h3 className="text-2xl md:text-3xl text-white mb-2 font-bold" style={{ fontFamily: 'Bebas Neue, sans-serif', fontWeight: 700, letterSpacing: '0.5px' }}>
             <span style={{ color: '#ffff87' }}>★</span> Pricing <span style={{ color: '#ffff87' }}>★</span>
           </h3>
