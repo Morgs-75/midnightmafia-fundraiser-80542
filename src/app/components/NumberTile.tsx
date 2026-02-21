@@ -117,7 +117,7 @@ export function NumberTile({ data, isSelected, onSelect, onViewMessage }: Number
       <span style={{
           fontFamily: "Poppins, sans-serif",
           fontWeight: 900,
-          fontSize: "clamp(0.35rem, 1.4vw, 0.65rem)",
+          fontSize: "clamp(0.7rem, 2.8vw, 1.3rem)",
           color: "rgba(255,255,255,0.7)",
           letterSpacing: "0.05em",
           lineHeight: 1,
