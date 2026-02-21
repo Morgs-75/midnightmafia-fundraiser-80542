@@ -51,13 +51,13 @@ export function calculateTotal(count: number): {
 }
 
 /**
- * Calculate Square processing fees (1.6% + $0.10 AUD)
- * @param subtotal Subtotal before fees
- * @returns Fee amount in dollars
+ * Calculate fee to charge so that after Square's deductions (1.6% + $0.10 + 10% GST on fee)
+ * the net received equals the subtotal exactly.
+ * Formula: fee = (subtotal * 0.0176 + 0.11) / 0.9824
  */
 export function calculateStripeFee(subtotal: number): number {
-  // Square AU rate: 1.6% + $0.10
-  return Math.round(((subtotal * 0.016) + 0.10) * 100) / 100;
+  const fee = (subtotal * 0.0176 + 0.11) / 0.9824;
+  return Math.round(fee * 100) / 100;
 }
 
 /**

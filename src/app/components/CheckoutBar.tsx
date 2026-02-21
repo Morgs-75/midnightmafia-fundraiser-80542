@@ -15,9 +15,9 @@ const calculatePrice = (count: number, pricePerNumber: number) => {
   return 100 + ((count - 5) * pricePerNumber);
 };
 
-// Calculate Square fees (1.6% + $0.10 AUD)
+// Gross up fee so net received = subtotal after Square's 1.6% + $0.10 + 10% GST on fee
 const calculateStripeFee = (subtotal: number) => {
-  return Math.round(((subtotal * 0.016) + 0.10) * 100) / 100;
+  return Math.round(((subtotal * 0.0176 + 0.11) / 0.9824) * 100) / 100;
 };
 
 // Calculate total including Square fees
