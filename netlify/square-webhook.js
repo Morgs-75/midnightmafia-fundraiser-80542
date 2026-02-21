@@ -37,18 +37,28 @@ export async function handler(event) {
   const squareEvent = JSON.parse(body);
   console.log('✅ Square webhook received:', squareEvent.type);
 
-  // Only process payment.updated events where status is COMPLETED
+  // Only process payment.updated events
   if (squareEvent.type !== 'payment.updated') {
     return { statusCode: 200, body: JSON.stringify({ received: true, processed: false }) };
   }
 
   const payment = squareEvent.data?.object?.payment;
+  const holdId = payment?.note;
+
+  // If payment failed or was cancelled, release the hold immediately
+  if (payment?.status === 'FAILED' || payment?.status === 'CANCELED') {
+    console.log(`⚠️ Payment ${payment.status} — releasing hold:`, holdId);
+    if (holdId) {
+      const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+      await supabase.from('numbers').update({ status: 'available', hold_expires_at: null, hold_id: null }).eq('hold_id', holdId).eq('status', 'held');
+      await supabase.from('holds').delete().eq('id', holdId);
+    }
+    return { statusCode: 200, body: JSON.stringify({ received: true, processed: false, status: payment?.status }) };
+  }
 
   if (payment?.status !== 'COMPLETED') {
     return { statusCode: 200, body: JSON.stringify({ received: true, processed: false, status: payment?.status }) };
   }
-
-  const holdId = payment?.note;
 
   if (!holdId) {
     console.error('❌ No holdId found in payment.note');

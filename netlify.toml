@@ -20,9 +20,9 @@
 # [[plugins]]
 #   package = "@netlify/plugin-functions-core"
 
-# Scheduled function to release expired holds
-# [functions.release-expired-holds]
-#   schedule = "*/2 * * * *"
+# Scheduled function to release expired holds every 2 minutes
+[functions.release-expired-holds]
+  schedule = "*/2 * * * *"
 
 # Redirects
 [[redirects]]
