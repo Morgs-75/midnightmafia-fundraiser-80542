@@ -425,7 +425,7 @@ export function BingoGame() {
           className="text-sm text-gray-500"
           style={{ fontFamily: "Poppins, sans-serif" }}
         >
-          Payments secured by Stripe · Questions? Contact{" "}
+          Payments secured by Square · Questions? Contact{" "}
           {CONFIG.contactPhone} or {CONFIG.contactEmail}
         </p>
         <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-sm" style={{ fontFamily: "Poppins, sans-serif" }}>
