@@ -127,14 +127,14 @@ export function HeroHeader({ drawDate }: HeroHeaderProps) {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-xl mx-auto text-center">
             {/* Single */}
-            <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-xl p-4 border border-purple-500/30">
-              <p className="text-white text-lg font-extrabold mb-1 uppercase tracking-wide" style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 800 }}>
+            <div className="rounded-xl p-4 border-2" style={{ background: 'linear-gradient(135deg, #000080, #0000cd)', borderColor: '#ffff87' }}>
+              <p className="text-lg font-extrabold mb-1 uppercase tracking-wide" style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 800, color: '#ffff87' }}>
                 Single Number
               </p>
-              <p className="text-yellow-400 text-4xl font-black" style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 900 }}>
+              <p className="text-4xl font-black" style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 900, color: '#ffff87' }}>
                 $25
               </p>
-              <p className="text-gray-300 text-sm mt-1" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              <p className="text-sm mt-1" style={{ fontFamily: 'Poppins, sans-serif', color: '#ffff87' }}>
                 Perfect for a quick entry!
               </p>
             </div>
@@ -142,7 +142,7 @@ export function HeroHeader({ drawDate }: HeroHeaderProps) {
             {/* Best Deal - 5 for $100 */}
             <motion.div
               className="rounded-xl p-4 pt-6 border-2 relative"
-              style={{ background: '#ffff87', borderColor: '#000080' }}
+              style={{ background: 'linear-gradient(135deg, #ffff87, #ffd700)', borderColor: '#000080' }}
               animate={{ rotate: [0, -2, 2, -2, 2, 0], scale: [1, 1.05, 1, 1.05, 1] }}
               transition={{ duration: 0.8, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }}
             >
