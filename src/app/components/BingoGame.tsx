@@ -397,7 +397,7 @@ export function BingoGame() {
           }
           .ticker-bottom-inner {
             display: inline-flex;
-            animation: ticker-bottom 40s linear infinite;
+            animation: ticker-bottom 2000s linear infinite;
             white-space: nowrap;
           }
         `}</style>
