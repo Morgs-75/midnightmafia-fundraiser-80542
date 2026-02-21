@@ -11,9 +11,9 @@ interface NumberTileProps {
 
 // Glow colours cycling across tiles
 const GLOWS = [
+  "255,255,135", // yellow #ffff87
   "236,72,153", // pink #ec4899
   "72,222,236", // blue #48deec
-  "255,255,135", // yellow #ffff87
 ];
 
 export function NumberTile({ data, isSelected, onSelect, onViewMessage }: NumberTileProps) {
