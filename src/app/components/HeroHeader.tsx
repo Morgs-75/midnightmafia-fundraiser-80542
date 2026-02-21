@@ -73,15 +73,6 @@ export function HeroHeader({ drawDate }: HeroHeaderProps) {
           .ticker-text {
             animation: glow-pulse 2s ease-in-out infinite;
           }
-          @keyframes ticker2 {
-            0%   { transform: translateX(-50%); }
-            100% { transform: translateX(0); }
-          }
-          .ticker2-inner {
-            display: inline-flex;
-            animation: ticker2 250s linear infinite;
-            white-space: nowrap;
-          }
         `}</style>
         <div className="w-full overflow-hidden bg-black border-y-4 border-yellow-400 py-8 mb-6">
           <div className="ticker-inner">
@@ -92,17 +83,6 @@ export function HeroHeader({ drawDate }: HeroHeaderProps) {
                 style={{ fontFamily: 'Bebas Neue, sans-serif' }}
               >
                 🏆 Grand Prize $500
-              </span>
-            ))}
-          </div>
-          <div className="ticker2-inner mt-2">
-            {Array(10).fill(null).map((_, i) => (
-              <span
-                key={i}
-                className="mx-12 text-pink-400 font-black"
-                style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: '1.5rem', filter: 'drop-shadow(0 0 8px rgba(236,72,153,0.8))' }}
-              >
-                🎁 WIN! Private Stunt Session ⭐ WIN! Beauty Basket ⭐ WIN! Iconic Fruit Loop Shirt ⭐ WIN! Gift Cards ⭐ WIN! Over 18 Beverage Bundle
               </span>
             ))}
           </div>
