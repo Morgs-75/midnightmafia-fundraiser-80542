@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "motion/react";
 import { NumberData } from "../types";
 import { NumberTile } from "./NumberTile";
 import { MessageModal } from "./MessageModal";
-import { Sparkles, Circle } from "lucide-react";
 
 interface NumberBoardProps {
   numbers: NumberData[];
@@ -21,26 +20,6 @@ export function NumberBoard({ numbers, selectedNumbers, onSelectNumber }: Number
         Choose Your Lucky Numbers
       </h2>
 
-      {/* Legend */}
-      <div className="max-w-4xl mx-auto mb-6 bg-gray-900/50 border border-gray-800 rounded-xl p-4">
-        <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-gradient-to-br from-pink-600/30 to-purple-700/30 border-2 border-pink-500 rounded flex items-center justify-center">
-              <Sparkles className="w-3 h-3 text-pink-400" />
-            </div>
-            <span className="text-gray-300" style={{ fontFamily: "Poppins, sans-serif" }}>
-              Sold <span className="text-pink-400 text-xs">(click to view message)</span>
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-gray-900/80 border-2 border-gray-700 rounded flex items-center justify-center">
-              <Circle className="w-3 h-3 text-gray-300" />
-            </div>
-            <span className="text-gray-300" style={{ fontFamily: "Poppins, sans-serif" }}>Available</span>
-          </div>
-        </div>
-      </div>
 
       {/* Board wrapper — relative for overlay, overflow:visible for puzzle tabs */}
       <div className="relative max-w-4xl mx-auto">
