@@ -107,7 +107,7 @@ export function HeroHeader({ drawDate }: HeroHeaderProps) {
           </span>
         </h1>
         
-        <p className="text-lg md:text-xl text-gray-300 whitespace-nowrap mx-auto" style={{ fontFamily: 'Poppins, sans-serif' }}>
+        <p className="text-lg md:text-xl text-gray-300 mx-auto" style={{ fontFamily: 'Poppins, sans-serif' }}>
           Pick your number. Support the team. Win prizes.
         </p>
         
