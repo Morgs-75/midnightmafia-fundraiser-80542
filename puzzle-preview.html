@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Puzzle Piece Preview — Neon</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #05050f;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+    padding: 48px 24px;
+    font-family: sans-serif;
+    color: #ccc;
+  }
+  h2 { color: #cc00ff; letter-spacing: 2px; font-size: 13px; text-transform: uppercase; }
+
+  /* Pastel glow pulses — soft, luminous halos */
+  @keyframes pulse-purple {
+    0%,100% { filter: drop-shadow(0 0 3px #c084fc66) drop-shadow(0 0 8px #c084fc33); }
+    50%      { filter: drop-shadow(0 0 6px #c084fccc) drop-shadow(0 0 16px #c084fc66) drop-shadow(0 0 28px #c084fc22); }
+  }
+  @keyframes pulse-blue {
+    0%,100% { filter: drop-shadow(0 0 3px #93c5fd66) drop-shadow(0 0 8px #93c5fd33); }
+    50%      { filter: drop-shadow(0 0 6px #93c5fdcc) drop-shadow(0 0 16px #93c5fd66) drop-shadow(0 0 28px #93c5fd22); }
+  }
+  @keyframes pulse-pink {
+    0%,100% { filter: drop-shadow(0 0 3px #f9a8d466) drop-shadow(0 0 8px #f9a8d433); }
+    50%      { filter: drop-shadow(0 0 6px #f9a8d4cc) drop-shadow(0 0 16px #f9a8d466) drop-shadow(0 0 28px #f9a8d422); }
+  }
+  .neon-available { animation: pulse-purple 2.5s ease-in-out infinite; }
+  .neon-team      { animation: pulse-blue   2.5s ease-in-out infinite; }
+  .neon-sold      { animation: pulse-pink   2s   ease-in-out infinite; }
+</style>
+</head>
+<body>
+
+<h2>10 × 20 board — fluoro neon</h2>
+<svg id="grid" viewBox="-25 -25 1050 2050" width="700" height="1400" style="overflow:visible"></svg>
+
+<script>
+const A=33, B=67, KD=18, KW=12, SH=5, SW=5;
+
+function generateTabMap(cols, rows) {
+  const rightTab  = Array.from({length:rows}, (_,r) =>
+    Array.from({length:cols}, (_,c) => c < cols-1 ? (r*cols + c*7 + 3) % 2 === 0 : false));
+  const bottomTab = Array.from({length:rows}, (_,r) =>
+    Array.from({length:cols}, (_,c) => r < rows-1 ? (r+c) % 2 === 1 : false));
+  return {rightTab, bottomTab};
+}
+
+function getPuzzlePath(col, row, tabMap, cols, rows) {
+  const top    = row===0      ? null : !tabMap.bottomTab[row-1][col];
+  const right  = col===cols-1 ? null :  tabMap.rightTab[row][col];
+  const bottom = row===rows-1 ? null :  tabMap.bottomTab[row][col];
+  const left   = col===0      ? null : !tabMap.rightTab[row][col-1];
+  let d = 'M 0,0 ';
+  if (top !== null) {
+    const s = top ? 1 : -1;
+    d += `L ${A},0 C ${A+SW},${s*SH} ${50-KW},${-s*KD} 50,${-s*KD} C ${50+KW},${-s*KD} ${B-SW},${s*SH} ${B},0 `;
+  }
+  d += 'L 100,0 ';
+  if (right !== null) {
+    const s = right ? 1 : -1;
+    d += `L 100,${A} C ${100-s*SH},${A+SW} ${100+s*KD},${50-KW} ${100+s*KD},50 C ${100+s*KD},${50+KW} ${100-s*SH},${B-SW} 100,${B} `;
+  }
+  d += 'L 100,100 ';
+  if (bottom !== null) {
+    const s = bottom ? 1 : -1;
+    d += `L ${B},100 C ${B-SW},${100-s*SH} ${50+KW},${100+s*KD} 50,${100+s*KD} C ${50-KW},${100+s*KD} ${A+SW},${100-s*SH} ${A},100 `;
+  }
+  d += 'L 0,100 ';
+  if (left !== null) {
+    const s = left ? 1 : -1;
+    d += `L 0,${B} C ${s*SH},${B-SW} ${-s*KD},${50+KW} ${-s*KD},50 C ${-s*KD},${50-KW} ${s*SH},${A+SW} 0,${A} `;
+  }
+  d += 'L 0,0 Z';
+  return d;
+}
+
+const NS = 'http://www.w3.org/2000/svg';
+const svg = document.getElementById('grid');
+const COLS=10, ROWS=20, TILE=100;
+const tabMap = generateTabMap(COLS, ROWS);
+
+// Shared defs (gradients + gloss)
+const defs = document.createElementNS(NS, 'defs');
+
+function addLinearGrad(id, x1, y1, x2, y2, stops) {
+  const g = document.createElementNS(NS, 'linearGradient');
+  g.setAttribute('id', id);
+  g.setAttribute('x1', x1); g.setAttribute('y1', y1);
+  g.setAttribute('x2', x2); g.setAttribute('y2', y2);
+  g.setAttribute('gradientUnits', 'userSpaceOnUse');
+  stops.forEach(([offset, color, opacity=1]) => {
+    const s = document.createElementNS(NS, 'stop');
+    s.setAttribute('offset', offset);
+    s.setAttribute('stop-color', color);
+    s.setAttribute('stop-opacity', opacity);
+    g.appendChild(s);
+  });
+  defs.appendChild(g);
+}
+
+// Pastel purple, pink, mid blue — rich dark base with pastel stroke/glow
+addLinearGrad('grad-available', 0, 0, 60, 100, [
+  ['0%',   '#5b21b6'],   // purple-700
+  ['100%', '#0f0520'],   // near-black purple
+]);
+addLinearGrad('grad-sold', 0, 0, 60, 100, [
+  ['0%',   '#9d174d'],   // pink-700
+  ['100%', '#200010'],   // near-black pink
+]);
+addLinearGrad('grad-held', 0, 0, 60, 100, [
+  ['0%',   '#1f2937'],   // gray-800
+  ['100%', '#080c12'],
+]);
+addLinearGrad('grad-team', 0, 0, 60, 100, [
+  ['0%',   '#1e40af'],   // blue-800
+  ['100%', '#060e2a'],   // near-black blue
+]);
+addLinearGrad('gloss', 0, 0, 0, 100, [
+  ['0%',   'white', 0.18],
+  ['50%',  'white', 0.04],
+  ['100%', 'white', 0],
+]);
+svg.appendChild(defs);
+
+// State assignment: vary across the board so all 3 states are visible
+// top rows = available, scattered sold/team/held
+function getTileState(n) {
+  if (n <= 5) return 'team';
+  if (n % 13 === 0 || n % 17 === 0) return 'sold';
+  if (n % 19 === 0) return 'held';
+  return 'available';
+}
+
+const stateConfig = {
+  available: { grad: 'grad-available', stroke: '#c084fc', textFill: '#ede9fe', cls: 'neon-available' },  // pastel purple
+  sold:      { grad: 'grad-sold',      stroke: '#f9a8d4', textFill: '#fce7f3', cls: 'neon-sold'      },  // pastel pink
+  held:      { grad: 'grad-held',      stroke: '#374151', textFill: '#4b5563', cls: ''               },  // dim grey
+  team:      { grad: 'grad-team',      stroke: '#93c5fd', textFill: '#dbeafe', cls: 'neon-team'      },  // mid blue
+};
+
+for (let r=0; r<ROWS; r++) {
+  for (let c=0; c<COLS; c++) {
+    const n = r*COLS + c + 1;
+    const state = getTileState(n);
+    const cfg = stateConfig[state];
+    const pathD = getPuzzlePath(c, r, tabMap, COLS, ROWS);
+
+    const g = document.createElementNS(NS, 'g');
+    g.setAttribute('transform', `translate(${c*TILE},${r*TILE})`);
+    if (cfg.cls) g.setAttribute('class', cfg.cls);
+    // stagger animation delay
+    if (cfg.cls) g.style.animationDelay = `${((n * 1.618) % 3).toFixed(2)}s`;
+
+    // Base fill
+    const base = document.createElementNS(NS, 'path');
+    base.setAttribute('d', pathD);
+    base.setAttribute('fill', `url(#${cfg.grad})`);
+    base.setAttribute('stroke', cfg.stroke);
+    base.setAttribute('stroke-width', '2');
+    g.appendChild(base);
+
+    // Gloss overlay
+    const gloss = document.createElementNS(NS, 'path');
+    gloss.setAttribute('d', pathD);
+    gloss.setAttribute('fill', 'url(#gloss)');
+    gloss.setAttribute('stroke', 'none');
+    g.appendChild(gloss);
+
+    // Number
+    const txt = document.createElementNS(NS, 'text');
+    txt.setAttribute('x','50'); txt.setAttribute('y','50');
+    txt.setAttribute('text-anchor','middle'); txt.setAttribute('dominant-baseline','central');
+    txt.setAttribute('fill', cfg.textFill);
+    txt.setAttribute('font-size','20');
+    txt.setAttribute('font-family','sans-serif');
+    txt.setAttribute('font-weight','700');
+    txt.textContent = n;
+    g.appendChild(txt);
+
+    svg.appendChild(g);
+  }
+}
+</script>
+</body>
+</html>
